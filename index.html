@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
-  <title>Ruta Aula Digital · SISE</title>
+  <title>Ruta SISE · SISE</title>
   <style>
     :root{
       --sise:#c8173e;
@@ -41,6 +41,8 @@
     button{cursor:pointer}
     a{color:inherit}
     .hidden{display:none!important}
+    body.capture-open{overflow:hidden;touch-action:none}
+    body.capture-open .mobile-bottom{visibility:hidden;pointer-events:none}
 
     /* App shell */
     .app{
@@ -243,18 +245,18 @@
     /* Capture sheet */
     .overlay{position:fixed;inset:0;background:rgba(20,15,17,.48);backdrop-filter:blur(3px);z-index:80;opacity:0;pointer-events:none;transition:.2s ease}
     .overlay.open{opacity:1;pointer-events:auto}
-    .sheet{position:fixed;z-index:90;right:0;top:0;height:100vh;width:min(560px,100%);background:#fff;transform:translateX(105%);transition:.28s ease;box-shadow:-24px 0 70px rgba(0,0,0,.16);display:flex;flex-direction:column}
+    .sheet{position:fixed;z-index:90;right:0;top:0;height:100dvh;max-height:100dvh;width:min(620px,100%);background:#fff;transform:translateX(105%);transition:.28s ease;box-shadow:-24px 0 70px rgba(0,0,0,.16);display:flex;flex-direction:column;overflow:hidden}
     .sheet.open{transform:translateX(0)}
-    .sheet-head{padding:23px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+    .sheet-head{padding:23px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex:0 0 auto;background:#fff}
     .sheet-head small{display:block;color:var(--sise);text-transform:none;letter-spacing:0;font-size:11px;font-weight:700}.sheet-head h3{font-size:28px;line-height:1.08;margin:5px 0 4px;font-weight:800}.sheet-head p{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px;color:var(--muted);margin:0;line-height:1.4}
     .icon-btn{width:42px;height:42px;border:1px solid var(--line);background:#fff;border-radius:12px;display:grid;place-items:center;color:var(--ink)}
-    .sheet-body{padding:24px;overflow:auto;flex:1;background:#fbfafb}
+    .sheet-body{padding:24px;overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;background:#fbfafb;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
     .sheet-section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:15px}
     .sheet-section h4{font-size:19px;margin:0 0 13px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #ded9dc;background:white;border-radius:999px;padding:8px 12px;font-weight:700;font-size:14px}.chip.active{background:var(--soft);border-color:#ff98b4;color:#981137}
     .mic-box{border:1.5px dashed #e2c3cd;background:#fff9fb;border-radius:16px;padding:18px;text-align:center}.mic-button{width:66px;height:66px;border-radius:50%;border:0;background:var(--sise);color:white;display:grid;place-items:center;margin:0 auto 10px;box-shadow:0 12px 28px rgba(255,14,73,.24)}.mic-button.recording{animation:pulse 1.2s infinite}.mic-button svg{width:28px;height:28px}@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,14,73,.32)}70%{box-shadow:0 0 0 16px rgba(255,14,73,0)}100%{box-shadow:0 0 0 0 rgba(255,14,73,0)}}
     .mic-title{font-weight:800;font-size:18px}.mic-status{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px;color:var(--muted);margin-top:3px}.transcript{margin-top:13px;text-align:left;background:white;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:13px;line-height:1.45;min-height:72px;color:#5e575a}.audio-playback{width:100%;margin-top:10px;display:none}
     .consent{display:flex;gap:10px;align-items:flex-start;background:#f7f5f6;border-radius:12px;padding:12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px;color:#625c5f;line-height:1.35}.consent input{margin-top:2px;accent-color:var(--sise)}
-    .sheet-foot{padding:16px 24px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;background:white}
+    .sheet-foot{padding:16px 24px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end;background:white;flex:0 0 auto}
 
 
     /* Structured capture + evidence */
@@ -347,8 +349,8 @@
       .dash-head{display:block}.dash-head h2{font-size:36px}.visit-chip{margin-top:14px}
       .summary-strip{grid-template-columns:1fr 1fr 1fr;padding:18px;gap:12px}.summary-meta{grid-column:1/-1;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.16)}.sum-kpi{border-left:0;padding-left:0}.sum-kpi strong{font-size:26px}.sum-kpi span{font-size:10px}
       .quick-grid{grid-template-columns:1fr 1fr;gap:9px}.quick-action{min-height:105px;padding:14px}
-      .sheet{top:auto;bottom:0;height:min(89vh,860px);width:100%;border-radius:22px 22px 0 0;transform:translateY(105%)}.sheet.open{transform:translateY(0)}
-      .sheet-head{padding:18px}.sheet-body{padding:16px}.sheet-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom))}.sheet-foot .btn{flex:1}
+      .sheet{top:0;bottom:auto;height:100dvh;max-height:100dvh;width:100%;border-radius:0;transform:translateY(105%);box-shadow:none}.sheet.open{transform:translateY(0)}
+      .sheet-head{padding:calc(16px + env(safe-area-inset-top)) 18px 16px}.sheet-body{padding:16px 14px 20px;scrollbar-width:none}.sheet-body::-webkit-scrollbar{width:0;height:0;display:none}.sheet-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));gap:9px}.sheet-foot .btn{flex:1}.sheet-section{padding:16px;margin-bottom:12px}.mic-box{padding:15px}.transcript{min-height:64px}
       .privacy-badge span{display:none}.topbar-right{gap:8px}.exit-btn{padding:10px 12px;border-radius:12px}.exit-btn .exit-label{display:none}
       .quick-head{display:block}.quick-head .export-btn{margin-top:10px}
       .preview-grid{grid-template-columns:1fr 1fr}.data-map{grid-template-columns:1fr 1fr}
@@ -356,7 +358,83 @@
     }
     @media(max-width:390px){.quick-grid{grid-template-columns:1fr}.mode-btn{font-size:15px}.headline{font-size:39px}}
     @media(max-width:680px){.closed-card{padding:24px}.closed-meta{grid-template-columns:1fr}.exit-modal-actions{flex-direction:column-reverse}.exit-modal-actions .btn{width:100%}}
-  </style>
+  
+
+    /* v7 · ajustes de experiencia y cierre */
+    .label-with-info,.title-with-info{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .info-btn{width:22px;height:22px;border-radius:50%;border:1px solid #cbd5e1;background:#fff;color:#475569;font-size:12px;font-weight:800;display:inline-grid;place-items:center;padding:0;line-height:1;flex:0 0 auto}
+    .info-btn:hover{border-color:var(--sise);color:var(--sise);background:#fff7f9}
+    .summary-strip{grid-template-columns:minmax(0,1fr) 150px}
+    .dashboard-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .focus-card{background:#f8fafc;border-color:#e2e8f0;box-shadow:none}
+    .focus-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+    .focus-list{gap:0;margin-top:10px}
+    .focus-item{padding:10px 0;border-top:1px solid #e2e8f0}
+    .focus-item:first-child{padding-top:4px}
+    .focus-check{width:8px!important;height:8px!important;background:var(--sise)!important;color:transparent!important;margin-top:6px}
+    .context-help{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 14px}
+    .recent-item{grid-template-columns:10px minmax(0,1fr);gap:10px}
+    .recent-actions{display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap}
+    .recent-btn{border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:9px;padding:6px 9px;font-size:11px;font-weight:700}
+    .recent-btn:hover{border-color:var(--sise);color:var(--sise);background:#fff7f9}
+    .attachment-count{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);background:#f8fafc;border-radius:999px;padding:5px 7px}
+    .info-modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.42);z-index:150;display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}
+    .info-modal-backdrop.open{display:flex}
+    .info-modal-card{width:min(460px,100%);background:#fff;border-radius:20px;padding:22px;border:1px solid #e2e8f0;box-shadow:0 24px 70px rgba(15,23,42,.18)}
+    .info-modal-top{display:flex;align-items:center;justify-content:space-between}
+    .info-modal-icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#fff1f4;color:var(--sise);font-weight:800}
+    .info-modal-card h3{margin:14px 0 8px;font-size:23px}.info-modal-card p{margin:0 0 18px;color:#64748b;font-size:13px;line-height:1.6}.info-modal-card .btn{width:100%}
+    .closure-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px}.closure-head h2{font-size:38px;margin:0 0 7px}.closure-head p{margin:0;color:var(--muted);font-size:13px;line-height:1.55;max-width:720px}
+    .closure-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.closure-kpi{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:18px}.closure-kpi small{display:block;color:#64748b;font-size:11px;margin-bottom:5px}.closure-kpi strong{font-size:28px}
+    .closure-card-list{padding:22px}.closure-list-head h3{margin:0 0 5px}.closure-list-head p{margin:0 0 16px;color:var(--muted);font-size:12px;line-height:1.45}
+    .closure-item{border-top:1px solid #e2e8f0;padding:16px 0}.closure-item:first-child{border-top:0}.closure-item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.closure-item h4{margin:0;font-size:16px}.closure-item .closure-tag{font-size:10px;border-radius:999px;padding:5px 8px;background:#fff1f4;color:#9f1239;font-weight:700}.closure-item p{margin:8px 0 0;font-size:12px;color:#64748b;line-height:1.5}.recommend-box{margin-top:10px;background:#f8fafc;border-left:3px solid var(--sise);padding:10px 12px;border-radius:8px}.recommend-box strong{display:block;font-size:12px;margin-bottom:3px}.recommend-box span{display:block;font-size:11px;color:#64748b;line-height:1.45}
+    .closure-plan{margin-top:18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:18px}.closure-plan h3{margin:0 0 4px}.closure-plan p{margin:0;color:#64748b;font-size:12px;line-height:1.5;max-width:740px}
+    @media(max-width:980px){.summary-strip{grid-template-columns:minmax(0,1fr) 130px}.dashboard-actions{justify-content:flex-start}}
+    @media(max-width:680px){.summary-strip{grid-template-columns:minmax(0,1fr) 88px}.summary-meta{grid-column:auto;border-bottom:0;padding-bottom:0}.quick-grid{grid-template-columns:1fr 1fr}.quick-action:last-child{grid-column:1/-1}.closure-head{display:block}.closure-head .btn{margin-top:14px;width:100%}.closure-summary{grid-template-columns:1fr 1fr 1fr;gap:8px}.closure-kpi{padding:13px}.closure-kpi strong{font-size:22px}.closure-plan{display:block}.closure-plan .btn{width:100%;margin-top:14px}.dashboard-actions{width:100%}.dashboard-actions .export-btn{flex:1;justify-content:center}}
+
+
+
+    /* v8 · historial, derivación y flujo de cierre */
+    .history-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 13px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--slate);font-weight:700;transition:.18s ease}
+    .history-btn:hover{border-color:#94a3b8;background:#f8fafc}
+    .history-btn svg{width:18px;height:18px}
+    .side-step.step-link{cursor:pointer}.side-step.step-link:hover{background:rgba(255,255,255,.07);color:#fff}
+    .closure-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .closure-control label{display:block;font-size:11px;color:#64748b;margin-bottom:5px;font-weight:700}
+    .closure-control select{width:100%;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#334155;padding:9px 32px 9px 10px;font:inherit;font-size:12px;outline:none}
+    .closure-control select:focus{border-color:var(--sise);box-shadow:0 0 0 3px rgba(200,23,62,.08)}
+    .recommend-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .derive-btn{border:0;background:var(--sise);color:#fff;border-radius:10px;padding:8px 11px;font-size:11px;font-weight:800;white-space:nowrap}
+    .derive-btn:hover{background:var(--sise-2)}
+    .derive-status{display:inline-flex;margin-top:8px;padding:5px 8px;border-radius:999px;background:#eef6f2;color:#16684b;font-size:10px;font-weight:700}
+    .history-modal-card{width:min(760px,100%);max-height:min(82vh,760px);overflow:hidden;display:flex;flex-direction:column}
+    .history-modal-card .history-scroll{overflow:auto;padding-right:2px}
+    .history-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .history-list{display:grid;gap:10px}
+    .history-item{border:1px solid #e2e8f0;border-radius:14px;padding:13px;background:#fff}
+    .history-item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.history-item-top strong{font-size:13px}.history-item-top time{font-size:10px;color:#64748b;white-space:nowrap}
+    .history-item p{margin:6px 0 0!important;font-size:11px!important;line-height:1.45!important;color:#64748b!important}.history-chip{display:inline-flex;margin-top:8px;padding:4px 7px;border-radius:999px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:9px;font-weight:700}
+    .derive-modal-card{width:min(520px,100%)}
+    .derive-summary{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin:0 0 14px}.derive-summary small{display:block;font-size:10px;color:#64748b;margin-bottom:3px}.derive-summary strong{display:block;font-size:13px;color:#1e293b}.derive-summary p{margin:6px 0 0!important;font-size:11px!important}
+    .derive-note{font-size:10px;color:#64748b;line-height:1.45;margin-top:8px}
+    .field .readonly-box{width:100%;border:1px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:11px 12px;color:#334155;font-size:12px;font-weight:700}
+    @media(max-width:680px){.history-btn{padding:10px 11px}.history-btn .history-label{display:none}.closure-controls{grid-template-columns:1fr}.recommend-head{display:block}.derive-btn{margin-top:9px;width:100%}.history-modal-card{max-height:88vh}.user-pill{max-width:145px}}
+
+
+    .route-next{margin-top:22px;display:flex;justify-content:flex-end}.route-next .btn{min-width:180px}
+    @media(max-width:680px){.route-next .btn{width:100%}}
+
+
+    @media(max-width:680px){
+      #captureSheet .grid-2{display:grid;grid-template-columns:1fr;gap:0}
+      #captureSheet .field{margin-bottom:14px}
+      #captureSheet .field.compact{margin-bottom:12px}
+      #captureSheet .sheet-section:last-child{margin-bottom:0}
+      #captureSheet .control input,#captureSheet .control select,#captureSheet .control textarea{font-size:16px}
+      #captureSheet .chips{gap:7px}
+      #captureSheet .chip{padding:9px 12px;font-size:13px}
+    }
+</style>
 </head>
 <body>
 <div class="app">
@@ -367,13 +445,13 @@
     </div>
     <div class="side-title">
       <small>Plataforma institucional</small>
-      <h1 >Ruta Aula<br>digital</h1>
+      <h1 >Ruta SISE</h1>
       <p>Observar. Escuchar. Registrar.<br>Mejorar juntos.</p>
     </div>
     <div class="side-steps">
       <div class="side-step active" id="sideStep1"><div class="num">01</div><div><strong>Identificación</strong><span>Datos de la visita</span></div></div>
       <div class="side-step" id="sideStep2"><div class="num">02</div><div><strong>Recorrido</strong><span>Captura en jornada</span></div></div>
-      <div class="side-step" id="sideStep3"><div class="num">03</div><div><strong>Cierre</strong><span>Hallazgos y acciones</span></div></div>
+      <div class="side-step step-link" id="sideStep3" role="button" tabindex="0" aria-label="Ir al cierre"><div class="num">03</div><div><strong>Cierre</strong><span>Hallazgos y acciones</span></div></div>
     </div>
     <div class="sidebar-foot"><strong>RUTA AULA</strong><br>Prototipo funcional · SISE 2026</div>
   </aside>
@@ -386,7 +464,7 @@
           <span class="dot"></span>
           <div class="top-title-wrap">
             <div class="top-kicker">Instituto SISE</div>
-            <div class="top-app-title">Ruta Aula Digital</div>
+            <div class="top-app-title">Ruta SISE</div>
             <div class="top-subline">Monitoreo y seguimiento académico</div>
           </div>
         </div>
@@ -396,10 +474,14 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
           <span>Registro protegido</span>
         </div>
+        <button type="button" class="history-btn" id="historyBtn" title="Ver mi historial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/><path d="M12 7v5l3 2"/></svg>
+          <span class="history-label">Mi historial</span>
+        </button>
         <div class="user-pill" title="Usuario activo">
           <div class="user-avatar" id="userInitials">RA</div>
           <div class="user-meta">
-            <strong id="userDisplayName">Ruta Aula</strong>
+            <strong id="userDisplayName">Ruta SISE</strong>
             <span id="userDisplayRole">Visita en preparación</span>
           </div>
         </div>
@@ -413,7 +495,7 @@
     <section class="content" id="screenRegister">
       <div class="eyebrow">Inicio de visita</div>
       <h1 class="headline">Iniciar<br>ruta aula</h1>
-      <p class="subhead">Registra tus datos y el contexto de la visita. La plataforma tomará automáticamente la fecha, la hora y tu ubicación para dejar trazabilidad de la jornada.</p>
+      <p class="subhead">Registra tus datos y el contexto de la visita. La fecha y la hora se registran automáticamente; la ubicación solo se solicita cuando la modalidad es presencial.</p>
       <div class="progress-wrap"><div class="progress"><span id="progressBar" style="width:33%"></span></div><div class="progress-label">Paso 1 de 3</div></div>
 
       <div class="form-shell">
@@ -453,8 +535,7 @@
                   <option>Gestión Docente</option>
                   <option>Innovación y Transformación Educativa</option>
                   <option>Gestión Curricular</option>
-                  <option>Experiencia</option>
-                  <option>Jefatura de Sede</option>
+                  <option>Jefatura Sedes y Experiencia</option>
                   <option>Jefatura de Escuela</option>
                 </select>
                 <span class="arrow">⌄</span>
@@ -467,12 +548,12 @@
                 <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
                 <select id="role">
                   <option value="">Selecciona un rol</option>
-                  <option>Jefe de sede</option>
+                  <option>Jefe de sedes y experiencia</option>
                   <option>Jefe de escuela</option>
                   <option>Representante de Gestión Docente</option>
                   <option>Representante de Innovación y Transformación Educativa</option>
                   <option>Representante de Gestión Curricular</option>
-                  <option>Representante de Experiencia</option>
+                  <option>Representante de Jefatura Sedes y Experiencia</option>
                 </select>
                 <span class="arrow">⌄</span>
               </div>
@@ -507,7 +588,9 @@
           </div>
 
           <div class="field" id="fieldMode">
-            <label>Modalidad de visita <span class="required">*</span></label>
+            <label class="label-with-info">Modalidad de visita <span class="required">*</span>
+              <button type="button" class="info-btn" aria-label="Información sobre modalidad" data-info-title="Modalidad de visita" data-info-text="Usa Presencial cuando la visita ocurre físicamente en una sede o aula SISE; requiere validar la ubicación del dispositivo. Usa Virtual cuando observas una clase o interacción realizada en Canvas, Teams u otra sesión remota; en ese caso la evidencia principal es la sesión virtual y no la ubicación física.">i</button>
+            </label>
             <div class="mode-group" role="radiogroup" aria-label="Modalidad de visita">
               <button class="mode-btn" type="button" data-mode="Presencial" aria-pressed="false">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6M8 10h1M15 10h1"/></svg>
@@ -541,13 +624,15 @@
           </div>
           <div class="auto-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><div><small>Fecha</small><strong id="autoDate">—</strong></div><span class="lock">🔒</span></div>
           <div class="auto-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><small>Hora de inicio</small><strong id="autoTime">—</strong></div><span class="lock">🔒</span></div>
-          <div class="auto-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.3"/></svg><div class="auto-location-main"><small>Dirección / ubicación</small><strong id="autoAddress">Selecciona una sede</strong><span class="coords" id="autoCoords">La ubicación GPS se activará al elegir modalidad presencial.</span></div><span class="lock">🔒</span></div>
-          <div id="locationStatus" class="location-status pending"><span>●</span><span>La dirección de la sede funciona sin internet. Para una visita presencial, activa la ubicación del teléfono.</span></div>
-          <div class="location-actions">
-            <button type="button" class="location-btn" id="requestLocationBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="requestLocationLabel">Activar ubicación</span></button>
-            <a id="mapLink" class="location-btn secondary" target="_blank" rel="noopener" style="display:none;text-decoration:none">Ver en Maps ↗</a>
+          <div id="locationBlock" class="hidden">
+            <div class="auto-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.3"/></svg><div class="auto-location-main"><small>Dirección / ubicación</small><strong id="autoAddress">Selecciona una sede</strong><span class="coords" id="autoCoords">La ubicación GPS se activará al elegir modalidad presencial.</span></div><span class="lock">🔒</span></div>
+            <div id="locationStatus" class="location-status pending"><span>●</span><span>La dirección de la sede funciona sin internet. Para una visita presencial, activa la ubicación del teléfono.</span></div>
+            <div class="location-actions">
+              <button type="button" class="location-btn" id="requestLocationBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.3"/></svg><span id="requestLocationLabel">Activar ubicación</span></button>
+              <a id="mapLink" class="location-btn secondary" target="_blank" rel="noopener" style="display:none;text-decoration:none">Ver en Maps ↗</a>
+            </div>
+            <div class="network-note" id="networkNote">La captura GPS puede funcionar sin internet. Si estás sin conexión, se usará la dirección institucional guardada de la sede.</div>
           </div>
-          <div class="network-note" id="networkNote">La captura GPS puede funcionar sin internet. Si estás sin conexión, se usará la dirección institucional guardada de la sede.</div>
         </aside>
       </div>
     </section>
@@ -559,56 +644,76 @@
       </div>
 
       <section class="summary-strip">
-        <div class="summary-meta"><small>Ruta Aula · contexto activo</small><strong id="summaryCampus">—</strong><span id="summaryArea">—</span></div>
-        <div class="sum-kpi"><strong id="kpiRooms">0</strong><span>Aulas / sesiones</span></div>
-        <div class="sum-kpi"><strong id="kpiPeople">0</strong><span>Personas escuchadas</span></div>
-        <div class="sum-kpi"><strong id="kpiFindings">0</strong><span>Hallazgos</span></div>
+        <div class="summary-meta"><small>Ruta SISE · contexto activo</small><strong id="summaryCampus">—</strong><span id="summaryArea">—</span></div>
+        <div class="sum-kpi"><strong id="kpiRooms">0</strong><span>Aulas</span></div>
       </section>
 
       <div class="dashboard-grid">
         <section class="card quick-card">
           <div class="quick-head">
-            <div><h3>¿Qué estás haciendo ahora?</h3><p>Registra mientras recorres la sede o participas de una sesión virtual. La información se guarda en campos separados para facilitar su análisis.</p></div>
-            <button type="button" class="export-btn" id="exportExcel" title="Descargar registros en columnas compatibles con Excel">⇩ Exportar para Excel</button>
+            <div><h3 class="title-with-info">¿Qué estás haciendo ahora?
+              <button type="button" class="info-btn" aria-label="Información sobre tipos de registro" data-info-title="Tipos de registro" data-info-text="Elige la opción que mejor representa lo que estás recogiendo. Observar clase es para una sesión académica; Observar sede para espacios, servicios y operación; Voz del estudiante y Voz del docente para conversaciones; Otros hallazgos solo para situaciones que no encajan en las cuatro opciones anteriores.">i</button>
+            </h3><p>Selecciona una opción. El formulario se adapta y muestra únicamente los campos y dimensiones pertinentes.</p></div>
+            <div class="dashboard-actions"><button type="button" class="export-btn" id="exportExcel" title="Descargar registros y evidencias">⇩ Exportar registros y adjuntos</button></div>
           </div>
           <div class="quick-grid">
-            <button class="quick-action" data-action="Aula"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/></svg></span><span><strong>Observar aula</strong><small>Presencial o virtual</small></span></button>
-            <button class="quick-action" data-action="Estudiante"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2"/><path d="M3 21a6 6 0 0 1 12 0M14 21a4 4 0 0 1 7 0"/></svg></span><span><strong>Escuchar estudiante</strong><small>Voz y experiencia</small></span></button>
-            <button class="quick-action" data-action="Docente"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="3"/><path d="M5 20a7 7 0 0 1 14 0M18 4l2 2-2 2"/></svg></span><span><strong>Escuchar docente</strong><small>Condiciones y soporte</small></span></button>
-            <button class="quick-action" data-action="Sede"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span><span><strong>Observar sede</strong><small>Espacios y servicios</small></span></button>
-            <button class="quick-action" data-action="Hallazgo"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 20h18L12 2Z"/><path d="M12 9v4M12 17h.01"/></svg></span><span><strong>Registrar hallazgo</strong><small>Fortaleza, brecha o alerta</small></span></button>
-            <button class="quick-action audio" data-action="Audio"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></span><span><strong>Grabar y transcribir</strong><small>Audio → texto → registro</small></span></button>
+            <button class="quick-action" data-action="Aula"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/></svg></span><span><strong>Observar clase</strong><small>Sesión presencial o virtual</small></span></button>
+            <button class="quick-action" data-action="Sede"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span><span><strong>Observar sede</strong><small>Espacios, servicios y operación</small></span></button>
+            <button class="quick-action" data-action="Estudiante"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2"/><path d="M3 21a6 6 0 0 1 12 0M14 21a4 4 0 0 1 7 0"/></svg></span><span><strong>Voz del estudiante</strong><small>Experiencia y continuidad</small></span></button>
+            <button class="quick-action" data-action="Docente"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="3"/><path d="M5 20a7 7 0 0 1 14 0M18 4l2 2-2 2"/></svg></span><span><strong>Voz del docente</strong><small>Condiciones y soporte</small></span></button>
+            <button class="quick-action" data-action="Hallazgo"><span class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 20h18L12 2Z"/><path d="M12 9v4M12 17h.01"/></svg></span><span><strong>Otros hallazgos</strong><small>Situaciones fuera de las opciones anteriores</small></span></button>
           </div>
         </section>
 
         <div class="side-stack">
           <section class="card focus-card">
-            <span class="focus-badge" id="focusBadge">Foco del área</span>
-            <h3 id="focusTitle">Tu ruta de observación</h3>
-            <p id="focusText">El sistema prioriza los aspectos más útiles para el área seleccionada.</p>
+            <div class="focus-heading"><span class="focus-badge" id="focusBadge">Área</span><button type="button" class="info-btn" aria-label="Información sobre focos" data-info-title="Focos del área" data-info-text="Son orientaciones breves que cambian según el área seleccionada. No son una lista de evaluación ni obligan a registrar todo; sirven para recordar qué mirar durante la visita.">i</button></div>
+            <h3 id="focusTitle">Focos del área</h3>
             <div class="focus-list" id="focusList"></div>
           </section>
           <section class="card recent-card">
-            <h3>Últimos registros</h3>
-            <p>Los registros de esta visita aparecerán aquí.</p>
+            <h3 class="title-with-info">Últimos registros <button type="button" class="info-btn" aria-label="Información sobre edición" data-info-title="Registros editables" data-info-text="Puedes volver a abrir cualquier registro de la visita para revisarlo, corregir datos y añadir nuevas fotos o documentos antes de cerrar la jornada.">i</button></h3>
+            <p>Puedes revisar, editar y agregar evidencias a un registro ya guardado.</p>
             <div id="recentList"><div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px;color:var(--muted);padding:10px 0">Aún no hay registros.</div></div>
           </section>
         </div>
       </div>
+      <div class="route-next"><button type="button" class="btn btn-primary" id="continueToClosureBtn">Continuar <span aria-hidden="true">→</span></button></div>
+    </section>
+
+
+    <section class="content hidden" id="screenClosure">
+      <div class="closure-head">
+        <div><div class="eyebrow">Cierre de visita</div><h2>Hallazgos y acciones</h2><p>Revisa lo registrado antes de cerrar. Las recomendaciones son orientativas y buscan facilitar la derivación y el seguimiento.</p></div>
+        <button type="button" class="btn btn-outline" id="backToDashboard">← Volver al recorrido</button>
+      </div>
+      <div class="closure-summary">
+        <div class="closure-kpi"><small>Aulas</small><strong id="closureRooms">0</strong></div>
+        <div class="closure-kpi"><small>Registros</small><strong id="closureRecords">0</strong></div>
+        <div class="closure-kpi"><small>Con seguimiento</small><strong id="closureFollowups">0</strong></div>
+      </div>
+      <section class="card closure-card-list">
+        <div class="closure-list-head"><div><h3 class="title-with-info">Hallazgos registrados <button type="button" class="info-btn" aria-label="Información sobre recomendaciones" data-info-title="Recomendaciones del cierre" data-info-text="La plataforma propone un área y una acción inicial usando la dimensión, naturaleza y tipo de registro. Es una ayuda para ordenar el cierre; el responsable de la visita confirma la decisión final.">i</button></h3><p>Para cada registro se propone un siguiente paso y el área SISE con la que convendría revisarlo.</p></div></div>
+        <div id="closureList"></div>
+      </section>
+      <section class="closure-plan">
+        <div><h3>Plan de acción simple</h3><p>1. Confirma el hallazgo con la evidencia disponible. 2. Derívalo al área sugerida. 3. Define responsable y fecha si requiere seguimiento.</p></div>
+        <button type="button" class="btn btn-primary" id="finishVisitFromClosure">Finalizar visita</button>
+      </section>
     </section>
 
     <section class="content hidden closed-screen" id="screenClosed">
       <div class="closed-card">
         <div class="closed-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 12 4 4L19 6"/></svg></div>
         <h2>Visita cerrada y registrada</h2>
-        <p>La hora de salida quedó registrada como un evento de cierre de sesión. Puedes descargar el registro de la visita o iniciar una nueva.</p>
+        <p>La visita quedó finalizada y se registraron la hora de salida y la duración. Puedes descargar el registro o iniciar una nueva visita.</p>
         <div class="closed-meta">
           <div><small>Hora de salida</small><strong id="closedTime">—</strong></div>
           <div><small>Duración</small><strong id="closedDuration">—</strong></div>
           <div><small>Registros de campo</small><strong id="closedRecords">0</strong></div>
         </div>
         <div class="closed-actions">
-          <button type="button" class="btn btn-outline" id="downloadClosedVisit">Descargar registro</button>
+          <button type="button" class="btn btn-outline" id="downloadClosedVisit">Descargar registros y adjuntos</button>
           <button type="button" class="btn btn-primary" id="newVisitBtn">Iniciar nueva visita</button>
         </div>
       </div>
@@ -626,35 +731,71 @@
 <div class="exit-modal-backdrop" id="exitModal" aria-hidden="true">
   <div class="exit-modal-card" role="dialog" aria-modal="true" aria-labelledby="exitModalTitle">
     <div class="exit-modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></div>
-    <h3 id="exitModalTitle">¿Cerrar la visita?</h3>
-    <p id="exitModalText">Se registrará automáticamente la hora de salida y el cierre de esta sesión.</p>
+    <h3 id="exitModalTitle">¿Finalizar la visita?</h3>
+    <p id="exitModalText">La visita solo se finaliza desde el Paso 3: cierre.</p>
     <div class="exit-modal-actions">
       <button type="button" class="btn btn-outline" id="cancelExitBtn">Cancelar</button>
-      <button type="button" class="btn btn-primary" id="confirmExitBtn">Cerrar y registrar</button>
+      <button type="button" class="btn btn-primary" id="confirmExitBtn">Finalizar visita</button>
     </div>
+  </div>
+</div>
+
+
+<div class="info-modal-backdrop" id="infoModal" aria-hidden="true">
+  <div class="info-modal-card" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+    <div class="info-modal-top"><div class="info-modal-icon">i</div><button type="button" class="icon-btn" id="closeInfoModal" aria-label="Cerrar información">✕</button></div>
+    <h3 id="infoModalTitle">Información</h3>
+    <p id="infoModalText"></p>
+    <button type="button" class="btn btn-primary" id="acceptInfoModal">Entendido</button>
+  </div>
+</div>
+
+<div class="info-modal-backdrop" id="historyModal" aria-hidden="true">
+  <div class="info-modal-card history-modal-card" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+    <div class="history-header">
+      <div><div class="info-modal-icon">↺</div><h3 id="historyModalTitle">Mi historial</h3><p id="historyModalSubtitle">Interacciones guardadas con tu correo institucional en este dispositivo.</p></div>
+      <button type="button" class="icon-btn" id="closeHistoryModal" aria-label="Cerrar historial">✕</button>
+    </div>
+    <div class="history-scroll"><div class="history-list" id="historyList"></div></div>
+  </div>
+</div>
+
+<div class="info-modal-backdrop" id="deriveModal" aria-hidden="true">
+  <div class="info-modal-card derive-modal-card" role="dialog" aria-modal="true" aria-labelledby="deriveModalTitle">
+    <div class="info-modal-top"><div class="info-modal-icon">→</div><button type="button" class="icon-btn" id="closeDeriveModal" aria-label="Cerrar derivación">✕</button></div>
+    <h3 id="deriveModalTitle">Derivar hallazgo</h3>
+    <div class="derive-summary"><small>Área sugerida</small><strong id="deriveArea">—</strong><p id="deriveFinding">—</p></div>
+    <div class="field compact" id="deriveNameField"><label for="deriveName">Nombre de la persona <span class="required">*</span></label><div class="control"><input class="no-icon" id="deriveName" placeholder="Ej. Ana Pérez" /></div><span class="error">Ingresa el nombre.</span></div>
+    <div class="field compact" id="deriveEmailField"><label for="deriveEmail">Correo de la persona <span class="required">*</span></label><div class="control"><input class="no-icon" id="deriveEmail" type="email" placeholder="nombre@sise.edu.pe" /></div><span class="error">Ingresa un correo válido.</span></div>
+    <div class="field compact"><label for="deriveMessage">Mensaje adicional</label><div class="control"><textarea id="deriveMessage" style="min-height:88px" placeholder="Añade una indicación breve si es necesario."></textarea></div></div>
+    <div class="derive-note">La derivación se enviará directamente desde Ruta SISE. No se abrirá Outlook, Gmail ni otra aplicación. Si estás sin conexión, quedará en cola para enviarse automáticamente cuando vuelva internet.</div>
+    <div class="exit-modal-actions" style="margin-top:16px"><button type="button" class="btn btn-outline" id="cancelDeriveBtn">Cancelar</button><button type="button" class="btn btn-primary" id="confirmDeriveBtn">Enviar derivación</button></div>
   </div>
 </div>
 
 <div class="overlay" id="overlay"></div>
 <aside class="sheet" id="captureSheet" aria-hidden="true">
   <header class="sheet-head">
-    <div><small id="sheetEyebrow">Nuevo registro</small><h3 id="sheetTitle">Observar aula</h3><p id="sheetSubtitle">Registra solo lo necesario. Puedes escribir o dictar una nota.</p></div>
+    <div><small id="sheetEyebrow">Nuevo registro</small><h3 id="sheetTitle">Observar clase</h3><p id="sheetSubtitle">Registra solo lo necesario. Puedes escribir o dictar una nota.</p></div>
     <button class="icon-btn" id="closeSheet" aria-label="Cerrar">✕</button>
   </header>
   <div class="sheet-body">
     <section class="sheet-section">
       <div class="sheet-kicker">Datos segmentados</div>
-      <h4>Contexto del registro</h4>
+      <h4 class="title-with-info">Contexto del registro <button type="button" class="info-btn" aria-label="Información sobre campos" data-info-title="Campos según el tipo de registro" data-info-text="La plataforma muestra solo los datos útiles para la opción seleccionada. Por ejemplo, Observar sede no exige carrera, curso ni ciclo; Observar clase sí muestra esos campos para poder segmentar el análisis.">i</button></h4>
+      <p class="context-help" id="contextHelp">Completa únicamente los datos que ayuden a ubicar el registro.</p>
       <div class="grid-2">
-        <div class="field compact"><label for="captureProgram">Programa / carrera</label><div class="control"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg><input id="captureProgram" placeholder="Ej. Desarrollo de Sistemas" /></div></div>
-        <div class="field compact"><label for="captureCourse">Curso / asignatura</label><div class="control"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5zM8 8h8M8 12h8"/></svg><input id="captureCourse" placeholder="Ej. Programación Web" /></div></div>
+        <div class="field compact context-field" id="contextProgramField"><label for="captureProgram">Programa / carrera</label><div class="control"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg><input id="captureProgram" placeholder="Ej. Desarrollo de Sistemas" /></div></div>
+        <div class="field compact context-field" id="contextCourseField"><label for="captureCourse">Curso / asignatura</label><div class="control"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5zM8 8h8M8 12h8"/></svg><input id="captureCourse" placeholder="Ej. Programación Web" /></div></div>
       </div>
       <div class="grid-2">
-        <div class="field compact"><label for="captureCycle">Ciclo</label><div class="control"><input class="no-icon" id="captureCycle" placeholder="Ej. III" /></div></div>
-        <div class="field compact"><label for="captureTurn">Turno</label><div class="control"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><select id="captureTurn"><option>Mañana</option><option>Tarde</option><option>Noche</option></select><span class="arrow">⌄</span></div></div>
+        <div class="field compact context-field" id="contextCycleField"><label for="captureCycle">Ciclo</label><div class="control"><input class="no-icon" id="captureCycle" placeholder="Ej. III" /></div></div>
+        <div class="field compact context-field" id="contextTurnField"><label for="captureTurn">Turno</label><div class="control"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><select id="captureTurn"><option value="">Selecciona un turno</option><option>Mañana</option><option>Tarde</option><option>Noche</option></select><span class="arrow">⌄</span></div></div>
       </div>
-      <div class="field compact"><label for="captureSection">Aula / sección / sesión</label><div class="control"><input class="no-icon" id="captureSection" placeholder="Ej. Aula 402 · Sección DS31" /></div></div>
-      <div class="structured-note">Cada dato queda en una columna independiente al exportar: programa, curso, ciclo, turno, sección y tipo de registro.</div>
+      <div class="field compact context-field" id="contextSectionField"><label for="captureSection">Aula / sección / sesión</label><div class="control"><input class="no-icon" id="captureSection" placeholder="Ej. Aula 402 · Sección DS31" /></div></div>
+      <div class="field compact context-field hidden" id="contextSpaceField"><label for="captureSpace">Espacio / ambiente</label><div class="control"><input class="no-icon" id="captureSpace" placeholder="Ej. Laboratorio 302, módulo de atención, patio" /></div></div>
+      <div class="field compact context-field hidden" id="contextReferenceField"><label for="captureReference">Contexto / referencia</label><div class="control"><input class="no-icon" id="captureReference" placeholder="Describe brevemente dónde o en qué situación ocurrió" /></div></div>
+      <div class="structured-note" id="contextStructuredNote">Los datos visibles se exportan en columnas independientes para facilitar filtros y análisis.</div>
     </section>
 
     <section class="sheet-section person-section hidden" id="personSection">
@@ -673,14 +814,10 @@
 
     <section class="sheet-section">
       <div class="sheet-kicker">Clasificación</div>
-      <h4>Datos para análisis</h4>
-      <div class="field compact"><label for="captureDimension">Dimensión</label><div class="control"><select id="captureDimension" class="no-icon"><option value="">Selecciona una dimensión</option><option>D1 · Aula y desempeño docente</option><option>D2 · Currículo, sílabo y evaluación</option><option>D3 · Plataformas y conectividad</option><option>D4 · Infraestructura y equipamiento</option><option>D5 · Servicios y atención</option><option>D6 · Matrícula, pagos y cobranzas</option><option>D7 · Información y comunicación</option><option>D8 · Bienestar y vida estudiantil</option><option>D9 · Prácticas, EFSRT y empleabilidad</option><option>D10 · Gestión de la sede</option></select><span class="arrow">⌄</span></div></div>
+      <h4 class="title-with-info">Datos para análisis <button type="button" class="info-btn" aria-label="Información sobre clasificación" data-info-title="Clasificación del registro" data-info-text="La dimensión y los criterios disponibles cambian según lo que estás registrando. La naturaleza indica si es una Fortaleza, Brecha, Alerta u Oportunidad; el alcance ayuda a distinguir un caso puntual de un patrón más amplio.">i</button></h4>
+      <div class="field compact"><label for="captureDimension">Dimensión</label><div class="control"><select id="captureDimension" class="no-icon"><option value="">Selecciona una dimensión</option></select><span class="arrow">⌄</span></div></div>
       <div class="field"><label>Naturaleza</label><div class="chips" id="natureChips"><button type="button" class="chip">Fortaleza</button><button type="button" class="chip">Brecha</button><button type="button" class="chip">Alerta</button><button type="button" class="chip">Oportunidad</button></div></div>
       <div class="field"><label>Alcance</label><div class="chips" id="scopeChips"><button type="button" class="chip">Caso</button><button type="button" class="chip">Programa</button><button type="button" class="chip">Sede</button><button type="button" class="chip">Transversal</button><button type="button" class="chip">Institucional</button></div></div>
-      <div class="grid-2">
-        <div class="field compact"><label for="captureRecurrence">Recurrencia</label><div class="control"><select id="captureRecurrence" class="no-icon"><option>Nuevo</option><option>Reiterado en esta sede</option><option>Visto en otras sedes</option></select><span class="arrow">⌄</span></div></div>
-        <div class="field compact"><label for="captureFollowup">Acción posterior</label><div class="control"><select id="captureFollowup" class="no-icon"><option>Solo registrar</option><option>Requiere seguimiento</option><option>Escalar como incidencia</option></select><span class="arrow">⌄</span></div></div>
-      </div>
     </section>
 
     <section class="sheet-section">
@@ -698,7 +835,7 @@
 
     <section class="sheet-section">
       <div class="sheet-kicker">Evidencias</div>
-      <h4>Fotos y documentos</h4>
+      <h4 class="title-with-info">Fotos y documentos <button type="button" class="info-btn" aria-label="Información sobre evidencias" data-info-title="Evidencias" data-info-text="Puedes tomar fotos desde el celular o adjuntar documentos. Los archivos quedan asociados al registro y se incluyen en el paquete de exportación junto con una ruta de acceso desde el archivo compatible con Excel.">i</button></h4>
       <div class="evidence-zone">
         <div class="evidence-actions">
           <button type="button" class="evidence-btn primary" id="takePhotoBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h4l2-3h4l2 3h4v13H4V7Z"/><circle cx="12" cy="13" r="4"/></svg>Tomar foto</button>
@@ -711,7 +848,7 @@
       </div>
     </section>
   </div>
-  <footer class="sheet-foot"><button class="btn btn-ghost" id="cancelCapture">Cancelar</button><button class="btn btn-primary" id="saveCapture">Guardar registro</button></footer>
+  <footer class="sheet-foot"><button class="btn btn-ghost" id="cancelCapture">Cancelar</button><button class="btn btn-primary" id="saveCapture">Cerrar y registrar</button></footer>
 </aside>
 
 <div class="toast" id="toast">Registro guardado.</div>
@@ -722,6 +859,8 @@
     location:null,
     visitStart:null,
     visitMeta:null,
+    visitId:'',
+    derivationRecordId:'',
     visitEnd:null,
     visitClosed:false,
     timerHandle:null,
@@ -732,11 +871,68 @@
     mediaRecorder:null,
     mediaChunks:[],
     recognition:null,
-    listening:false
+    listening:false,
+    editingRecordId:null,
+    attachmentMemory:{}
   };
 
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
+
+
+// Configuración de integración institucional.
+// Para envío real y directo, configura un endpoint HTTPS que acepte POST JSON.
+// Ejemplo de payload: {to,name,subject,body,area,recordId,record,attachments}
+const RUTA_SISE_CONFIG = Object.assign({
+  emailEndpoint:'',
+  emailTimeoutMs:12000
+}, window.RUTA_SISE_CONFIG || {});
+
+const DERIVATION_QUEUE_KEY='rutaSisePendingDerivationsV1';
+function readDerivationQueue(){try{return JSON.parse(localStorage.getItem(DERIVATION_QUEUE_KEY)||'[]')||[]}catch(e){return []}}
+function writeDerivationQueue(items){try{localStorage.setItem(DERIVATION_QUEUE_KEY,JSON.stringify(items.slice(0,200)))}catch(e){}}
+function queueDerivation(payload){
+  const q=readDerivationQueue();
+  const idx=q.findIndex(x=>x.queueId===payload.queueId);
+  if(idx>=0)q[idx]=payload;else q.push(payload);
+  writeDerivationQueue(q);
+}
+async function postDerivation(payload){
+  if(!RUTA_SISE_CONFIG.emailEndpoint)throw new Error('EMAIL_ENDPOINT_NOT_CONFIGURED');
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),RUTA_SISE_CONFIG.emailTimeoutMs);
+  try{
+    const response=await fetch(RUTA_SISE_CONFIG.emailEndpoint,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      credentials:'include',
+      body:JSON.stringify(payload),
+      signal:controller.signal
+    });
+    if(!response.ok)throw new Error(`EMAIL_HTTP_${response.status}`);
+    let data={};try{data=await response.json()}catch(e){}
+    return data;
+  }finally{clearTimeout(timer)}
+}
+async function flushPendingDerivations(){
+  if(!navigator.onLine||!RUTA_SISE_CONFIG.emailEndpoint)return;
+  const q=readDerivationQueue();if(!q.length)return;
+  const remaining=[];
+  for(const item of q){
+    try{
+      await postDerivation(item.payload);
+      const record=state.records.find(r=>r.recordId===item.recordId);
+      if(record){
+        record.derivationStatus='Correo enviado';
+        record.derivationAt=new Date().toISOString();
+        persistUserHistory(record);
+      }
+    }catch(e){remaining.push(item)}
+  }
+  writeDerivationQueue(remaining);
+  if(typeof persistDraft==='function')persistDraft();
+  if(typeof renderClosure==='function'&&!$('#screenClosure')?.classList.contains('hidden'))renderClosure();
+}
 
   // Catálogo local para mostrar direcciones incluso sin internet.
   // Las direcciones se mantienen dentro del HTML y no requieren servicios externos.
@@ -757,6 +953,42 @@
   let locationRequestInProgress=false;
 
 
+  const HISTORY_KEY='rutaAulaUserHistoryV1';
+  function saveLoginIdentity(){
+    try{localStorage.setItem('rutaAulaLastIdentity',JSON.stringify({name:$('#fullName')?.value.trim()||'',email:$('#email')?.value.trim()||'',area:$('#area')?.value||'',role:$('#role')?.value||''}))}catch(e){}
+  }
+  function restoreLoginIdentity(){
+    try{const v=JSON.parse(localStorage.getItem('rutaAulaLastIdentity')||'null');if(!v)return;if($('#fullName')&&!$('#fullName').value)$('#fullName').value=v.name||'';if($('#email')&&!$('#email').value)$('#email').value=v.email||'';if($('#area')&&!$('#area').value)$('#area').value=v.area||'';if($('#role')&&!$('#role').value)$('#role').value=v.role||'';}catch(e){}
+  }
+  function readUserHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')||[]}catch(e){return []}}
+  function persistUserHistory(record){
+    const email=(record?.visitorEmail||state.visitMeta?.visitorEmail||$('#email')?.value||'').trim().toLowerCase();if(!email||!record)return;
+    const item={...record,visitorEmail:email,time:undefined,attachmentRefs:undefined};
+    const id=item.historyId||item.recordId||`${item.systemEvent||'EVT'}-${Date.now()}`;item.historyId=id;
+    let all=readUserHistory();const idx=all.findIndex(x=>x.historyId===id&&String(x.visitorEmail||'').toLowerCase()===email);if(idx>=0)all[idx]=item;else all.unshift(item);all=all.slice(0,500);
+    try{localStorage.setItem(HISTORY_KEY,JSON.stringify(all))}catch(e){}
+  }
+  function currentUserEmail(){return (state.visitMeta?.visitorEmail||$('#email')?.value||'').trim().toLowerCase()}
+  function renderHistory(){
+    const email=currentUserEmail(),box=$('#historyList');if(!box)return;
+    if(!email){box.innerHTML='<div class="history-item"><strong>Ingresa tu correo institucional</strong><p>El historial se organiza por el correo y nombre con los que inicias la visita.</p></div>';$('#historyModalSubtitle').textContent='Completa tu identificación para consultar el historial.';return}
+    const items=readUserHistory().filter(x=>String(x.visitorEmail||'').toLowerCase()===email).sort((a,b)=>String(b.visitDate||'').localeCompare(String(a.visitDate||''))||String(b.recordTime||'').localeCompare(String(a.recordTime||'')));
+    $('#historyModalSubtitle').textContent=`Interacciones asociadas a ${email} guardadas en este dispositivo.`;
+    if(!items.length){box.innerHTML='<div class="history-item"><strong>Aún no hay interacciones guardadas</strong><p>Cuando inicies una visita o registres hallazgos aparecerán aquí.</p></div>';return}
+    box.innerHTML=items.map(x=>{const title=x.recordType||x.systemEvent||'Interacción',detail=x.note||x.dimension||x.campus||'',meta=[x.campus,x.modality,x.visitorArea].filter(Boolean).join(' · ');return `<article class="history-item"><div class="history-item-top"><strong>${escapeHtml(title)}</strong><time>${escapeHtml(x.visitDate||'')} ${escapeHtml((x.recordTime||'').slice(0,5))}</time></div><p>${escapeHtml(detail)}</p>${meta?`<span class="history-chip">${escapeHtml(meta)}</span>`:''}${x.derivationStatus?`<span class="history-chip">${escapeHtml(x.derivationStatus)}</span>`:''}</article>`}).join('');
+  }
+  function openHistory(){renderHistory();$('#historyModal').classList.add('open');$('#historyModal').setAttribute('aria-hidden','false')}
+  function closeHistory(){$('#historyModal').classList.remove('open');$('#historyModal').setAttribute('aria-hidden','true')}
+
+  function openDerivation(recordId){
+    const record=state.records.find(r=>r.recordId===recordId);if(!record)return;state.derivationRecordId=recordId;const rec=recommendationFor(record);
+    $('#deriveArea').textContent=rec.area;$('#deriveFinding').textContent=record.note||record.criteria||record.dimension||record.recordType;$('#deriveName').value=record.derivationName||'';$('#deriveEmail').value=record.derivationEmail||'';$('#deriveMessage').value='';$('#deriveNameField').classList.remove('invalid');$('#deriveEmailField').classList.remove('invalid');$('#deriveModal').classList.add('open');$('#deriveModal').setAttribute('aria-hidden','false');setTimeout(()=>$('#deriveName')?.focus(),100)
+  }
+  function closeDerivation(){$('#deriveModal').classList.remove('open');$('#deriveModal').setAttribute('aria-hidden','true');state.derivationRecordId=''}
+  function buildDerivationMail(record,recipientName,area,message){
+    const context=record.modality==='Virtual'?`Modalidad: Virtual\nPlataforma / sesión: ${record.platform||''} ${record.virtualSession||''}`:`Modalidad: Presencial\nSede: ${record.campus||''}\nDirección: ${record.address||''}`;
+    return `Hola ${recipientName},\n\nSe deriva el siguiente hallazgo registrado en Ruta SISE.\n\nÁrea sugerida: ${area}\nTipo de registro: ${record.recordType||''}\nDimensión: ${record.dimension||''}\nNaturaleza: ${record.nature||''}\nAlcance: ${record.scope||''}\nRecurrencia: ${record.recurrence||'Pendiente de cierre'}\nAcción posterior: ${record.followup||'Pendiente de cierre'}\n${context}\n\nHallazgo:\n${record.note||record.criteria||'Sin nota adicional.'}\n\n${message?`Mensaje adicional:\n${message}\n\n`:''}Registrado por: ${record.visitorName||''} (${record.visitorEmail||''})\nFecha: ${record.visitDate||''} ${record.recordTime||''}\nCódigo: ${record.recordId||''}`;
+  }
   function getInitials(name=''){
     return name.trim().split(/\s+/).filter(Boolean).slice(0,2).map(part=>part[0].toUpperCase()).join('') || 'RA';
   }
@@ -764,7 +996,7 @@
     const name=($('#fullName')?.value||'').trim();
     const role=($('#role')?.value||'').trim();
     const area=($('#area')?.value||'').trim();
-    const display=name||'Ruta Aula';
+    const display=name||'Ruta SISE';
     const initials=$('#userInitials');
     const displayName=$('#userDisplayName');
     const displayRole=$('#userDisplayRole');
@@ -774,21 +1006,35 @@
   }
 
   const focusByArea = {
-    'Gestión Docente':[['Desarrollo de la sesión','Propósito, actividad, participación y retroalimentación.'],['Condiciones para enseñar','Recursos, plataforma, equipamiento y soporte.'],['Necesidades del docente','Barrera principal y acompañamiento requerido.']],
-    'Innovación y Transformación Educativa':[['Experiencia activa','Casos, retos, proyectos y participación significativa.'],['Uso pedagógico de herramientas','Tecnología e IA con intención de aprendizaje.'],['Prácticas replicables','Experiencias que vale la pena escalar a otras aulas.']],
+    'Gestión Docente':[['Práctica docente','Conducción de la clase, participación y retroalimentación.'],['Condiciones para enseñar','Recursos, plataforma, equipamiento y soporte.'],['Acompañamiento','Necesidades y apoyos que requiere el docente.']],
+    'Innovación y Transformación Educativa':[['Experiencia activa','Participación, retos, casos y aprendizaje aplicado.'],['Uso pedagógico','Tecnología e IA con una intención clara de aprendizaje.'],['Prácticas replicables','Experiencias que vale la pena compartir o escalar.']],
     'Gestión Curricular':[['Coherencia curricular','Sílabo, resultado de aprendizaje y actividad.'],['Evaluación','Correspondencia entre lo trabajado y lo evaluado.'],['Secuencia y materiales','Progresión, pertinencia y actualización.']],
-    'Experiencia':[['Voz del estudiante','Qué funciona y qué cambiaría de su experiencia.'],['Continuidad','Señales de pausa, abandono o desconexión.'],['Resolución','A quién acude y qué tan fácil es resolver una dificultad.']],
-    'Jefatura de Sede':[['Operación de aula','Inicio de clases, cobertura y soporte.'],['Infraestructura','Aulas, laboratorios, equipos y conectividad.'],['Compromisos previos','Verificar si las mejoras acordadas se sostienen.']],
-    'Jefatura de Escuela':[['Patrón por programa','Detectar temas que se repiten entre sedes.'],['Experiencia académica','Cruzar voz de estudiante, docente y aula.'],['Acción de escuela','Definir si la situación requiere intervención académica.']]
+    'Jefatura Sedes y Experiencia':[['Experiencia del estudiante','Fricciones, atención, información y continuidad.'],['Operación de sede','Inicio de clases, soporte, servicios y atención.'],['Condiciones del espacio','Aulas, laboratorios, equipos y conectividad.']],
+    'Jefatura de Escuela':[['Experiencia académica','Cruzar clase, voz del estudiante y voz del docente.'],['Patrones del programa','Detectar temas que se repiten entre cursos o sedes.'],['Acción de escuela','Identificar cuándo corresponde una intervención académica.']]
   };
 
   const chipsByAction = {
-    Aula:['Propósito claro','Actividad práctica','Participación','Retroalimentación','Evidencia de aprendizaje','Uso de plataforma'],
-    Estudiante:['Clase','Docente','Servicios','Información','Continuidad','Empleabilidad'],
-    Docente:['Sílabo y materiales','Recursos','Plataforma','Soporte de sede','Acompañamiento','Carga / horarios'],
-    Sede:['Aulas','Laboratorio','Equipamiento','Conectividad','Atención','Espacios comunes'],
-    Hallazgo:['D1 Aula y docente','D2 Currículo y evaluación','D3 Plataforma','D4 Infraestructura','D5 Servicios','D6 Matrícula / pagos','D7 Comunicación','D8 Bienestar','D9 Prácticas / EFSRT','D10 Gestión de sede'],
-    Audio:['Estudiante','Docente','Observación','Dato','Contraste']
+    Aula:['Propósito y organización','Actividad / metodología','Participación','Evaluación / retroalimentación','Recursos / plataforma','Condiciones del ambiente'],
+    Estudiante:['Experiencia de clase','Docente','Servicios y atención','Información y comunicación','Continuidad / permanencia','Bienestar','Empleabilidad'],
+    Docente:['Planificación y materiales','Práctica pedagógica','Recursos y equipamiento','Plataforma / conectividad','Soporte de sede','Acompañamiento','Carga / horarios'],
+    Sede:['Infraestructura','Laboratorios / equipos','Conectividad','Servicios y atención','Información / señalización','Espacios comunes','Gestión de sede'],
+    Hallazgo:['Académico','Curricular','Tecnológico','Infraestructura','Servicio / atención','Información','Bienestar','Empleabilidad','Gestión de sede']
+  };
+
+  const dimensionsByAction = {
+    Aula:['D1 · Aula y desempeño docente','D2 · Currículo, sílabo y evaluación','D3 · Plataformas y conectividad','D4 · Infraestructura y equipamiento'],
+    Estudiante:['D1 · Aula y desempeño docente','D2 · Currículo, sílabo y evaluación','D3 · Plataformas y conectividad','D5 · Servicios y atención','D6 · Matrícula, pagos y cobranzas','D7 · Información y comunicación','D8 · Bienestar y vida estudiantil','D9 · Prácticas, EFSRT y empleabilidad'],
+    Docente:['D1 · Aula y desempeño docente','D2 · Currículo, sílabo y evaluación','D3 · Plataformas y conectividad','D4 · Infraestructura y equipamiento','D7 · Información y comunicación','D9 · Prácticas, EFSRT y empleabilidad','D10 · Gestión de la sede'],
+    Sede:['D3 · Plataformas y conectividad','D4 · Infraestructura y equipamiento','D5 · Servicios y atención','D6 · Matrícula, pagos y cobranzas','D7 · Información y comunicación','D8 · Bienestar y vida estudiantil','D10 · Gestión de la sede'],
+    Hallazgo:['D1 · Aula y desempeño docente','D2 · Currículo, sílabo y evaluación','D3 · Plataformas y conectividad','D4 · Infraestructura y equipamiento','D5 · Servicios y atención','D6 · Matrícula, pagos y cobranzas','D7 · Información y comunicación','D8 · Bienestar y vida estudiantil','D9 · Prácticas, EFSRT y empleabilidad','D10 · Gestión de la sede']
+  };
+
+  const actionConfig = {
+    Aula:{label:'Observar clase',context:['program','course','cycle','turn','section'],help:'Identifica la sesión observada para comparar posteriormente por programa, curso, ciclo y turno.'},
+    Estudiante:{label:'Voz del estudiante',context:['program','cycle','turn','section'],help:'Ubica al estudiante y el contexto de la conversación. El curso no es obligatorio porque la experiencia puede ser más amplia que una clase.'},
+    Docente:{label:'Voz del docente',context:['program','course','turn','section'],help:'Registra el contexto de dictado y las condiciones que el docente describe u observas.'},
+    Sede:{label:'Observar sede',context:['turn','space','reference'],help:'En esta opción no se solicita carrera, curso ni ciclo. Registra el ambiente, servicio o punto de la sede que estás observando.'},
+    Hallazgo:{label:'Otros hallazgos',context:['turn','space','reference'],help:'Úsalo solo para situaciones relevantes que no correspondan a Observar clase, Observar sede, Voz del estudiante o Voz del docente.'}
   };
 
   function setNow(){
@@ -941,6 +1187,7 @@
   window.addEventListener('online',()=>{
     $('#networkNote').textContent='Conexión disponible. Si ya capturaste GPS, la dirección exacta puede actualizarse automáticamente.';
     if(state.location)reverseGeocode(state.location.lat,state.location.lng).then(a=>{if(a){state.location.address=a;$('#autoAddress').textContent=a;}});
+    flushPendingDerivations();
   });
   window.addEventListener('offline',()=>{
     $('#networkNote').textContent='Sin internet: el GPS, los formularios, fotos y registros siguen disponibles. Se usará la dirección institucional guardada de la sede.';
@@ -952,7 +1199,18 @@
     state.mode=btn.dataset.mode; $('#mode').value=state.mode;
     $$('.mode-btn').forEach(b=>{b.classList.toggle('selected',b===btn);b.setAttribute('aria-pressed',b===btn?'true':'false')});
     $('#virtualExtra').classList.toggle('hidden',state.mode!=='Virtual'); $('#fieldMode').classList.remove('invalid');
-    if(state.mode==='Presencial'&&!state.location)detectLocation(true);
+    const locBlock=$('#locationBlock');
+    if(state.mode==='Virtual'){
+      locBlock?.classList.add('hidden');
+      state.location=null;
+      $('#mapLink').style.display='none';
+      $('#autoAddress').textContent='No aplica para visita virtual';
+      $('#autoCoords').textContent='La modalidad virtual no solicita ubicación.';
+    }else{
+      locBlock?.classList.remove('hidden');
+      updateCampusAddressPreview();
+      if(!state.location)detectLocation(true);
+    }
   }));
 
   function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)}
@@ -972,11 +1230,14 @@
   function startVisit(){
     state.visitEnd=null; state.visitClosed=false;
     state.visitStart=new Date();
+    state.visitId=`VIS-${state.visitStart.getFullYear()}${String(state.visitStart.getMonth()+1).padStart(2,'0')}${String(state.visitStart.getDate()).padStart(2,'0')}-${String(state.visitStart.getHours()).padStart(2,'0')}${String(state.visitStart.getMinutes()).padStart(2,'0')}${String(state.visitStart.getSeconds()).padStart(2,'0')}`;
     state.visitMeta={
       visitorName:$('#fullName').value.trim(), visitorEmail:$('#email').value.trim(), area:$('#area').value, role:$('#role').value,
       campus:$('#campus').value, modality:state.mode, platform:$('#platform')?$('#platform').value:'', sessionId:$('#sessionId')?$('#sessionId').value.trim():'',
-      dateISO:state.visitStart.toISOString().slice(0,10), timeISO:state.visitStart.toTimeString().slice(0,8), location:state.location
+      dateISO:state.visitStart.toISOString().slice(0,10), timeISO:state.visitStart.toTimeString().slice(0,8), location:state.mode==='Presencial'?state.location:null, visitId:state.visitId
     };
+    saveLoginIdentity();
+    persistUserHistory({historyId:state.visitId,recordId:state.visitId,systemEvent:'INICIO_VISITA',recordType:'Inicio de visita',visitId:state.visitId,visitDate:state.visitMeta.dateISO,recordTime:state.visitMeta.timeISO,visitorName:state.visitMeta.visitorName,visitorEmail:state.visitMeta.visitorEmail,visitorArea:state.visitMeta.area,visitorRole:state.visitMeta.role,campus:state.visitMeta.campus,modality:state.visitMeta.modality,note:'Inicio de visita registrado.'});
     $('#screenRegister').classList.add('hidden'); $('#screenDashboard').classList.remove('hidden');
     $('#sideStep1').classList.remove('active'); $('#sideStep2').classList.add('active'); $('#progressBar').style.width='66%';
     $('#helloName').textContent=state.visitMeta.visitorName.split(' ')[0];
@@ -990,23 +1251,36 @@
     $('#visitTimer').textContent=h?`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
   }
   function renderFocus(area){
-    $('#focusBadge').textContent=area; $('#focusTitle').textContent='Foco recomendado';
-    $('#focusList').innerHTML=(focusByArea[area]||[]).map((x,i)=>`<div class="focus-item"><div class="focus-check">${i+1}</div><div><strong>${x[0]}</strong><span>${x[1]}</span></div></div>`).join('');
+    $('#focusBadge').textContent=area||'Área'; $('#focusTitle').textContent='Focos del área';
+    $('#focusList').innerHTML=(focusByArea[area]||[]).map(x=>`<div class="focus-item"><div class="focus-check">•</div><div><strong>${escapeHtml(x[0])}</strong><span>${escapeHtml(x[1])}</span></div></div>`).join('');
   }
 
   $$('.quick-action').forEach(btn=>btn.addEventListener('click',()=>openCapture(btn.dataset.action)));
-  function resetCaptureForm(){
-    ['#captureProgram','#captureCourse','#captureCycle','#captureSection','#personName','#personCode','#captureNote'].forEach(s=>{if($(s))$(s).value=''});
-    $('#captureTurn').value='Mañana'; $('#captureDimension').value=''; $('#captureRecurrence').value='Nuevo'; $('#captureFollowup').value='Solo registrar';
-    $('#transcriptBox').textContent='La transcripción aparecerá aquí y podrás revisarla antes de guardar.'; $('#audioPlayback').style.display='none'; $('#audioPlayback').removeAttribute('src');
-    $('#consentAudio').checked=false; $$('#captureSheet .chip.active').forEach(c=>c.classList.remove('active')); state.currentAttachments=[]; renderAttachments(); $('#fieldPersonName').classList.remove('invalid');
+  function renderDimensionOptions(action){
+    const sel=$('#captureDimension');
+    sel.innerHTML='<option value="">Selecciona una dimensión</option>'+((dimensionsByAction[action]||[]).map(d=>`<option>${escapeHtml(d)}</option>`).join(''));
   }
-  function openCapture(action){
-    resetCaptureForm(); state.currentAction=action;
-    const titles={Aula:'Observar aula / sesión',Estudiante:'Escuchar estudiante',Docente:'Escuchar docente',Sede:'Observar sede / espacio',Hallazgo:'Registrar hallazgo',Audio:'Grabar y transcribir'};
-    $('#sheetEyebrow').textContent=action==='Audio'?'Captura por voz':'Nuevo registro'; $('#sheetTitle').textContent=titles[action];
-    $('#criteriaTitle').textContent=action==='Audio'?'¿De dónde viene esta evidencia?':'¿Qué observaste o escuchaste?';
-    $('#criteriaChips').innerHTML=(chipsByAction[action]||[]).map(x=>`<button type="button" class="chip">${x}</button>`).join(''); bindChipGroup('#criteriaChips');
+  function applyContextFields(action){
+    const cfg=actionConfig[action]||actionConfig.Hallazgo;
+    const map={program:'#contextProgramField',course:'#contextCourseField',cycle:'#contextCycleField',turn:'#contextTurnField',section:'#contextSectionField',space:'#contextSpaceField',reference:'#contextReferenceField'};
+    Object.values(map).forEach(s=>$(s)?.classList.add('hidden'));
+    cfg.context.forEach(k=>$(map[k])?.classList.remove('hidden'));
+    $('#contextHelp').textContent=cfg.help;
+  }
+  function resetCaptureForm(){
+    ['#captureProgram','#captureCourse','#captureCycle','#captureSection','#captureSpace','#captureReference','#personName','#personCode','#captureNote'].forEach(s=>{if($(s))$(s).value=''});
+    $('#captureTurn').value=''; $('#captureDimension').value='';
+    $('#transcriptBox').textContent='La transcripción aparecerá aquí y podrás revisarla antes de guardar.'; $('#audioPlayback').style.display='none'; $('#audioPlayback').removeAttribute('src');
+    $('#consentAudio').checked=false; $$('#captureSheet .chip.active').forEach(c=>c.classList.remove('active')); state.currentAttachments=[]; renderAttachments(); $('#fieldPersonName').classList.remove('invalid'); state.editingRecordId=null; $('#saveCapture').textContent='Cerrar y registrar';
+  }
+  function openCapture(action,keepEdit=false){
+    if(!keepEdit)resetCaptureForm(); state.currentAction=action;
+    const cfg=actionConfig[action]||actionConfig.Hallazgo;
+    $('#sheetEyebrow').textContent=keepEdit?'Editar registro':'Nuevo registro'; $('#sheetTitle').textContent=cfg.label;
+    $('#sheetSubtitle').textContent='Registra solo lo necesario. Puedes escribir, dictar una nota y adjuntar evidencias.';
+    $('#criteriaTitle').textContent=action==='Estudiante'||action==='Docente'?'¿Qué tema apareció en la conversación?':'¿Qué observaste?';
+    $('#criteriaChips').innerHTML=(chipsByAction[action]||[]).map(x=>`<button type="button" class="chip">${escapeHtml(x)}</button>`).join(''); bindChipGroup('#criteriaChips');
+    applyContextFields(action); renderDimensionOptions(action);
     const person=action==='Estudiante'||action==='Docente'; $('#personSection').classList.toggle('hidden',!person);
     if(person){
       const isStudent=action==='Estudiante'; $('#personKicker').textContent='Persona escuchada'; $('#personHeading').textContent=isStudent?'Datos del estudiante':'Datos del docente';
@@ -1014,10 +1288,11 @@
       $('#personNameLabel').innerHTML=`Nombre y apellidos del ${isStudent?'estudiante':'docente'} <span class="required">*</span>`;
       $('#personCodeLabel').textContent=`Código de ${isStudent?'estudiante':'docente'} (opcional)`;
     }
-    if(action==='Audio')setTimeout(()=>$('#micButton').focus(),150);
+    document.body.classList.add('capture-open');
     $('#overlay').classList.add('open'); $('#captureSheet').classList.add('open'); $('#captureSheet').setAttribute('aria-hidden','false');
+    const sheetBody=$('#captureSheet .sheet-body'); if(sheetBody) sheetBody.scrollTop=0;
   }
-  function closeCapture(){if(state.listening)stopMic();$('#overlay').classList.remove('open');$('#captureSheet').classList.remove('open');$('#captureSheet').setAttribute('aria-hidden','true')}
+  function closeCapture(){if(state.listening)stopMic();document.body.classList.remove('capture-open');$('#overlay').classList.remove('open');$('#captureSheet').classList.remove('open');$('#captureSheet').setAttribute('aria-hidden','true')}
   $('#closeSheet').addEventListener('click',closeCapture); $('#cancelCapture').addEventListener('click',closeCapture); $('#overlay').addEventListener('click',closeCapture);
   function bindChipGroup(sel){$$(sel+' .chip').forEach(ch=>ch.addEventListener('click',()=>ch.classList.toggle('active')))}
   bindChipGroup('#natureChips'); bindChipGroup('#scopeChips');
@@ -1028,63 +1303,229 @@
   $('#cameraInput').addEventListener('change',e=>addFiles([...e.target.files]));
   $('#fileInput').addEventListener('change',e=>addFiles([...e.target.files]));
   function addFiles(files){
-    files.forEach(file=>{if(state.currentAttachments.length<10)state.currentAttachments.push({file,url:file.type.startsWith('image/')?URL.createObjectURL(file):''})});
+    files.forEach(file=>{if(state.currentAttachments.length<10)state.currentAttachments.push({file,name:file.name,type:file.type,size:file.size,url:file.type.startsWith('image/')?URL.createObjectURL(file):''})});
     renderAttachments(); $('#cameraInput').value=''; $('#fileInput').value='';
   }
   function renderAttachments(){
     const box=$('#previewGrid');
     if(!state.currentAttachments.length){box.innerHTML='';return}
-    box.innerHTML=state.currentAttachments.map((a,i)=>`<div class="file-preview">${a.url?`<img src="${a.url}" alt="Vista previa de ${escapeHtml(a.file.name)}">`:`<div class="file-generic">📄</div>`}<button type="button" class="file-remove" data-remove="${i}" aria-label="Quitar archivo">×</button><div class="file-meta"><strong>${escapeHtml(a.file.name)}</strong><span>${formatBytes(a.file.size)}</span></div></div>`).join('');
+    box.innerHTML=state.currentAttachments.map((a,i)=>`<div class="file-preview">${a.url?`<img src="${a.url}" alt="Vista previa de ${escapeHtml(attName(a))}">`:`<div class="file-generic">📄</div>`}<button type="button" class="file-remove" data-remove="${i}" aria-label="Quitar archivo">×</button><div class="file-meta"><strong>${escapeHtml(attName(a))}</strong><span>${formatBytes(attSize(a))}</span></div></div>`).join('');
     $$('[data-remove]').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.remove;const a=state.currentAttachments[i];if(a&&a.url)URL.revokeObjectURL(a.url);state.currentAttachments.splice(i,1);renderAttachments()}));
   }
-  function formatBytes(n){if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';return (n/1048576).toFixed(1)+' MB'}
+  function attName(a){return a?.file?.name||a?.name||'archivo'} function attType(a){return a?.file?.type||a?.type||''} function attSize(a){return a?.file?.size||a?.size||0} function attBlob(a){return a?.file||a?.blob||null} function formatBytes(n){if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';return (n/1048576).toFixed(1)+' MB'}
   function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 
-  $('#saveCapture').addEventListener('click',()=>{
+
+  function openAttachmentDB(){
+    return new Promise((resolve,reject)=>{
+      if(!('indexedDB' in window)){reject(new Error('IndexedDB no disponible'));return}
+      const req=indexedDB.open('rutaAulaDB',1);
+      req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains('attachments')){const s=db.createObjectStore('attachments',{keyPath:'id'});s.createIndex('recordId','recordId',{unique:false})}};
+      req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
+    });
+  }
+  async function deleteStoredAttachments(recordId){
+    try{const db=await openAttachmentDB(); await new Promise((resolve,reject)=>{const tx=db.transaction('attachments','readwrite'),store=tx.objectStore('attachments'),idx=store.index('recordId'),req=idx.openCursor(IDBKeyRange.only(recordId));req.onsuccess=e=>{const c=e.target.result;if(c){c.delete();c.continue()} };tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)});db.close()}catch(e){}
+  }
+  async function persistAttachments(recordId,items){
+    state.attachmentMemory[recordId]=items.map(a=>({file:attBlob(a),name:attName(a),type:attType(a),size:attSize(a),url:a.url||''}));
+    const refs=[];
+    try{
+      await deleteStoredAttachments(recordId); const db=await openAttachmentDB();
+      await new Promise((resolve,reject)=>{const tx=db.transaction('attachments','readwrite'),store=tx.objectStore('attachments');items.forEach((a,i)=>{const blob=attBlob(a);if(!blob)return;const id=`${recordId}__${String(i+1).padStart(2,'0')}`;refs.push({id,name:attName(a),type:attType(a),size:attSize(a)});store.put({id,recordId,name:attName(a),type:attType(a),size:attSize(a),blob})});tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)});db.close();
+    }catch(e){items.forEach((a,i)=>refs.push({id:`${recordId}__MEM_${i+1}`,name:attName(a),type:attType(a),size:attSize(a)}))}
+    return refs;
+  }
+  async function loadAttachments(record){
+    const mem=state.attachmentMemory[record.recordId];
+    if(mem?.length)return mem.map(a=>({file:a.file,name:a.name,type:a.type,size:a.size,url:a.type?.startsWith('image/')&&a.file?URL.createObjectURL(a.file):''}));
+    const refs=record.attachmentRefs||[]; if(!refs.length)return [];
+    try{const db=await openAttachmentDB();const arr=[];for(const ref of refs){const row=await new Promise((resolve,reject)=>{const tx=db.transaction('attachments','readonly'),req=tx.objectStore('attachments').get(ref.id);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});if(row?.blob)arr.push({blob:row.blob,name:row.name,type:row.type,size:row.size,url:row.type?.startsWith('image/')?URL.createObjectURL(row.blob):''})}db.close();return arr}catch(e){return []}
+  }
+
+  $('#saveCapture').addEventListener('click',async()=>{
     const action=state.currentAction, personRequired=action==='Estudiante'||action==='Docente';
     if(personRequired&&!$('#personName').value.trim()){ $('#fieldPersonName').classList.add('invalid'); $('#personName').focus(); showToast('Registra el nombre de la persona escuchada.'); return; }
     const nature=$$('#natureChips .chip.active').map(x=>x.textContent), scope=$$('#scopeChips .chip.active').map(x=>x.textContent), criteria=$$('#criteriaChips .chip.active').map(x=>x.textContent);
     const now=new Date(), note=$('#captureNote').value.trim(), transcript=$('#transcriptBox').textContent.includes('aparecerá aquí')?'':$('#transcriptBox').textContent.trim();
+    const editing=state.editingRecordId?state.records.find(r=>r.recordId===state.editingRecordId):null;
+    const recordId=editing?.recordId||`RA-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}${String(now.getSeconds()).padStart(2,'0')}-${String(state.records.filter(r=>r.systemEvent==='REGISTRO_CAMPO').length+1).padStart(3,'0')}`;
+    const attachmentRefs=await persistAttachments(recordId,state.currentAttachments);
     const record={
-      recordId:`RA-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(state.records.length+1).padStart(4,'0')}`,
-      systemEvent:'REGISTRO_CAMPO', visitStatus:'Activa', visitEndDate:'', visitEndTime:'', durationMinutes:'',
-      visitDate:state.visitMeta.dateISO, visitStartTime:state.visitMeta.timeISO, recordTime:new Intl.DateTimeFormat('es-PE',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now),
+      recordId, visitId:state.visitId, actionKey:action, systemEvent:'REGISTRO_CAMPO', visitStatus:'Activa', visitEndDate:'', visitEndTime:'', durationMinutes:'',
+      visitDate:state.visitMeta.dateISO, visitStartTime:state.visitMeta.timeISO, recordTime:editing?.recordTime||new Intl.DateTimeFormat('es-PE',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now), updatedTime:new Intl.DateTimeFormat('es-PE',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now),
       visitorName:state.visitMeta.visitorName, visitorEmail:state.visitMeta.visitorEmail, visitorArea:state.visitMeta.area, visitorRole:state.visitMeta.role,
       campus:state.visitMeta.campus, modality:state.visitMeta.modality, platform:state.visitMeta.platform, virtualSession:state.visitMeta.sessionId,
-      address:state.location?.address||'', latitude:state.location?.lat??'', longitude:state.location?.lng??'', accuracyM:state.location?.accuracy?Math.round(state.location.accuracy):'',
-      recordType:action, personType:personRequired?action:'', personName:personRequired?$('#personName').value.trim():'', personCode:personRequired?$('#personCode').value.trim():'',
-      program:$('#captureProgram').value.trim(), course:$('#captureCourse').value.trim(), cycle:$('#captureCycle').value.trim(), turn:$('#captureTurn').value, section:$('#captureSection').value.trim(),
-      dimension:$('#captureDimension').value, criteria:criteria.join(' | '), nature:nature[0]||'', scope:scope[0]||'', recurrence:$('#captureRecurrence').value, followup:$('#captureFollowup').value,
-      note, transcript, evidenceCount:state.currentAttachments.length, evidenceNames:state.currentAttachments.map(a=>a.file.name).join(' | '), evidenceTypes:state.currentAttachments.map(a=>a.file.type||'archivo').join(' | '), time:now
+      address:state.visitMeta.modality==='Presencial'?(state.location?.address||getCampusOfflineAddress()||''):'', latitude:state.visitMeta.modality==='Presencial'?(state.location?.lat??''):'', longitude:state.visitMeta.modality==='Presencial'?(state.location?.lng??''):'', accuracyM:state.visitMeta.modality==='Presencial'&&state.location?.accuracy?Math.round(state.location.accuracy):'',
+      recordType:(actionConfig[action]||actionConfig.Hallazgo).label, personType:personRequired?(action==='Estudiante'?'Estudiante':'Docente'):'', personName:personRequired?$('#personName').value.trim():'', personCode:personRequired?$('#personCode').value.trim():'',
+      program:$('#contextProgramField').classList.contains('hidden')?'':$('#captureProgram').value.trim(), course:$('#contextCourseField').classList.contains('hidden')?'':$('#captureCourse').value.trim(), cycle:$('#contextCycleField').classList.contains('hidden')?'':$('#captureCycle').value.trim(), turn:$('#contextTurnField').classList.contains('hidden')?'':$('#captureTurn').value, section:$('#contextSectionField').classList.contains('hidden')?'':$('#captureSection').value.trim(), space:$('#contextSpaceField').classList.contains('hidden')?'':$('#captureSpace').value.trim(), reference:$('#contextReferenceField').classList.contains('hidden')?'':$('#captureReference').value.trim(),
+      dimension:$('#captureDimension').value, criteria:criteria.join(' | '), nature:nature[0]||'', scope:scope[0]||'', recurrence:editing?.recurrence||'', followup:editing?.followup||'', derivationArea:editing?.derivationArea||'', derivationName:editing?.derivationName||'', derivationEmail:editing?.derivationEmail||'', derivationStatus:editing?.derivationStatus||'', derivationAt:editing?.derivationAt||'',
+      note, transcript, evidenceCount:attachmentRefs.length, evidenceNames:attachmentRefs.map(a=>a.name).join(' | '), evidenceTypes:attachmentRefs.map(a=>a.type||'archivo').join(' | '), attachmentRefs, time:editing?.time||now
     };
-    state.records.unshift(record);
-    try{
-      localStorage.setItem('rutaAulaDraftRecords',JSON.stringify({visitMeta:state.visitMeta,records:state.records,counters:state.counters,updatedAt:new Date().toISOString()}));
-    }catch(e){}
-    if(action==='Aula')state.counters.rooms++; if(personRequired)state.counters.people++; if(action==='Hallazgo'||nature.length)state.counters.findings++;
-    updateCounters(); renderRecent(); closeCapture(); showToast(`Registro ${record.recordId} guardado.`);
+    if(editing){const i=state.records.findIndex(r=>r.recordId===recordId);state.records[i]=record;showToast(`Registro ${recordId} actualizado.`)}else{state.records.unshift(record);if(action==='Aula')state.counters.rooms++;showToast(`Registro ${recordId} guardado.`)}
+    try{localStorage.setItem('rutaAulaDraftRecords',JSON.stringify({visitMeta:state.visitMeta,records:state.records,counters:state.counters,updatedAt:new Date().toISOString()}))}catch(e){}
+    persistUserHistory(record);
+    state.editingRecordId=null; updateCounters(); renderRecent(); closeCapture();
   });
 
-  function updateCounters(){$('#kpiRooms').textContent=state.counters.rooms;$('#kpiPeople').textContent=state.counters.people;$('#kpiFindings').textContent=state.counters.findings}
+  function updateCounters(){const el=$('#kpiRooms');if(el)el.textContent=state.counters.rooms}
   function renderRecent(){
-    const box=$('#recentList'); if(!state.records.length){box.innerHTML='<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;font-size:12px;color:var(--muted);padding:10px 0">Aún no hay registros.</div>';return}
-    box.innerHTML=state.records.slice(0,4).map(r=>{const cls=r.nature==='Alerta'?'red':r.nature==='Fortaleza'?'green':'amber';const title=r.personName?`${r.recordType}: ${r.personName}`:(r.criteria.split(' | ')[0]||r.recordType);const detail=r.note?r.note.slice(0,58)+(r.note.length>58?'…':''):`${r.program||'Sin programa'} · ${r.turn}`;return `<div class="recent-item"><span class="status-dot ${cls}"></span><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></div><time>${r.recordTime.slice(0,5)}</time></div>`}).join('');
+    const box=$('#recentList'); if(!state.records.filter(r=>r.systemEvent==='REGISTRO_CAMPO').length){box.innerHTML='<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;font-size:12px;color:var(--muted);padding:10px 0">Aún no hay registros.</div>';return}
+    box.innerHTML=state.records.filter(r=>r.systemEvent==='REGISTRO_CAMPO').slice(0,6).map(r=>{const cls=r.nature==='Alerta'?'red':r.nature==='Fortaleza'?'green':'amber';const detail=r.note?r.note.slice(0,70)+(r.note.length>70?'…':''):[r.dimension,r.space||r.program].filter(Boolean).join(' · ');return `<div class="recent-item"><span class="status-dot ${cls}"></span><div><strong>${escapeHtml(r.recordType)}${r.personName?`: ${escapeHtml(r.personName)}`:''}</strong><span>${escapeHtml(detail||'Registro guardado')}</span><div class="recent-actions"><button type="button" class="recent-btn" data-edit-record="${escapeHtml(r.recordId)}">Ver / editar</button>${r.evidenceCount?`<span class="attachment-count">📎 ${r.evidenceCount} adjunto${r.evidenceCount===1?'':'s'}</span>`:''}</div></div></div>`}).join('');
   }
 
-  // Excel-friendly CSV: one column per field, UTF-8 + semicolon delimiter.
+  $('#recentList').addEventListener('click',async e=>{const btn=e.target.closest('[data-edit-record]');if(!btn)return;const record=state.records.find(r=>r.recordId===btn.dataset.editRecord);if(!record)return;openCapture(record.actionKey||'Hallazgo');state.editingRecordId=record.recordId;$('#sheetEyebrow').textContent='Editar registro';$('#saveCapture').textContent='Actualizar registro';
+    $('#captureProgram').value=record.program||'';$('#captureCourse').value=record.course||'';$('#captureCycle').value=record.cycle||'';$('#captureTurn').value=record.turn||'';$('#captureSection').value=record.section||'';$('#captureSpace').value=record.space||'';$('#captureReference').value=record.reference||'';$('#personName').value=record.personName||'';$('#personCode').value=record.personCode||'';$('#captureNote').value=record.note||'';$('#captureDimension').value=record.dimension||'';
+    $$('#criteriaChips .chip').forEach(c=>c.classList.toggle('active',(record.criteria||'').split(' | ').includes(c.textContent)));$$('#natureChips .chip').forEach(c=>c.classList.toggle('active',c.textContent===record.nature));$$('#scopeChips .chip').forEach(c=>c.classList.toggle('active',c.textContent===record.scope));
+    if(record.transcript){$('#transcriptBox').textContent=record.transcript} state.currentAttachments=await loadAttachments(record);renderAttachments();
+  });
+
+  // Excel-friendly package with attachments: one column per field, UTF-8 + semicolon delimiter.
   $('#exportExcel').addEventListener('click',downloadExcelData);
-  function downloadExcelData(){
-    if(!state.records.length){showToast('Aún no hay registros para exportar.');return}
-    const cols=[['ID_REGISTRO','recordId'],['EVENTO_SISTEMA','systemEvent'],['ESTADO_VISITA','visitStatus'],['FECHA_FIN_VISITA','visitEndDate'],['HORA_FIN_VISITA','visitEndTime'],['DURACION_MINUTOS','durationMinutes'],['FECHA_VISITA','visitDate'],['HORA_INICIO_VISITA','visitStartTime'],['HORA_REGISTRO','recordTime'],['VISITANTE_NOMBRE','visitorName'],['VISITANTE_CORREO','visitorEmail'],['AREA_VISITANTE','visitorArea'],['ROL_VISITANTE','visitorRole'],['SEDE','campus'],['MODALIDAD','modality'],['PLATAFORMA_VIRTUAL','platform'],['SESION_VIRTUAL','virtualSession'],['DIRECCION','address'],['LATITUD','latitude'],['LONGITUD','longitude'],['PRECISION_M','accuracyM'],['TIPO_REGISTRO','recordType'],['TIPO_PERSONA','personType'],['PERSONA_NOMBRE','personName'],['PERSONA_CODIGO','personCode'],['PROGRAMA_CARRERA','program'],['CURSO_ASIGNATURA','course'],['CICLO','cycle'],['TURNO','turn'],['AULA_SECCION','section'],['DIMENSION','dimension'],['CRITERIOS','criteria'],['NATURALEZA','nature'],['ALCANCE','scope'],['RECURRENCIA','recurrence'],['ACCION_POSTERIOR','followup'],['NOTA','note'],['TRANSCRIPCION','transcript'],['N_EVIDENCIAS','evidenceCount'],['NOMBRES_EVIDENCIAS','evidenceNames'],['TIPOS_EVIDENCIAS','evidenceTypes']];
-    const esc=v=>'"'+String(v??'').replace(/"/g,'""').replace(/\r?\n/g,' ')+'"';
-    const csv='\uFEFF'+[cols.map(c=>esc(c[0])).join(';'),...state.records.map(r=>cols.map(c=>esc(r[c[1]])).join(';'))].join('\r\n');
-    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=url;a.download=`Ruta_Aula_Registros_${state.visitMeta.campus.replace(/\s+/g,'_')}_${state.visitMeta.dateISO}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('Archivo compatible con Excel generado.');
+  function sanitizeFileName(name){return String(name||'archivo').replace(/[\\/:*?"<>|]/g,'_').replace(/\s+/g,'_')}
+  function csvCell(v){return '"'+String(v??'').replace(/"/g,'""').replace(/\r?\n/g,' ')+'"'}
+  function u16(n){return new Uint8Array([n&255,(n>>>8)&255])}
+  function u32(n){return new Uint8Array([n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255])}
+  function concatBytes(parts){const total=parts.reduce((s,p)=>s+p.length,0),out=new Uint8Array(total);let o=0;parts.forEach(p=>{out.set(p,o);o+=p.length});return out}
+  const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?0xedb88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+  function crc32(bytes){let c=0xffffffff;for(const b of bytes)c=CRC_TABLE[(c^b)&255]^(c>>>8);return (c^0xffffffff)>>>0}
+  function dosDateTime(d=new Date()){let year=Math.max(1980,d.getFullYear());return {time:(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),date:((year-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate()}}
+  function makeZip(files){const enc=new TextEncoder(),locals=[],centrals=[];let offset=0;for(const f of files){const name=enc.encode(f.name),data=f.data instanceof Uint8Array?f.data:new Uint8Array(f.data),crc=crc32(data),dt=dosDateTime();const local=concatBytes([u32(0x04034b50),u16(20),u16(0x0800),u16(0),u16(dt.time),u16(dt.date),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),name,data]);locals.push(local);const central=concatBytes([u32(0x02014b50),u16(20),u16(20),u16(0x0800),u16(0),u16(dt.time),u16(dt.date),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset),name]);centrals.push(central);offset+=local.length}const centralBytes=concatBytes(centrals),localBytes=concatBytes(locals),eocd=concatBytes([u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(centralBytes.length),u32(localBytes.length),u16(0)]);return concatBytes([localBytes,centralBytes,eocd])}
+  async function attachmentFilesForRecord(record){const atts=await loadAttachments(record);return atts.map((a,i)=>({att:a,index:i+1,path:`adjuntos/${sanitizeFileName(record.recordId)}/${String(i+1).padStart(2,'0')}_${sanitizeFileName(attName(a))}`}))}
+  async function downloadExcelData(){
+    const fieldRecords=state.records.filter(r=>r.systemEvent==='REGISTRO_CAMPO'||r.systemEvent==='CIERRE_VISITA');
+    if(!fieldRecords.length){showToast('Aún no hay registros para exportar.');return}
+    showToast('Preparando registros y adjuntos…');
+    const allAtt={};let maxAtt=0,zipFiles=[];
+    for(const r of fieldRecords){
+      const list=await attachmentFilesForRecord(r);allAtt[r.recordId]=list;maxAtt=Math.max(maxAtt,list.length);
+      for(const item of list){const blob=attBlob(item.att);if(blob)zipFiles.push({name:item.path,data:new Uint8Array(await blob.arrayBuffer())})}
+    }
+    const cols=[['ID_REGISTRO','recordId'],['ID_VISITA','visitId'],['EVENTO_SISTEMA','systemEvent'],['ESTADO_VISITA','visitStatus'],['FECHA_FIN_VISITA','visitEndDate'],['HORA_FIN_VISITA','visitEndTime'],['DURACION_MINUTOS','durationMinutes'],['FECHA_VISITA','visitDate'],['HORA_INICIO_VISITA','visitStartTime'],['HORA_REGISTRO','recordTime'],['HORA_ACTUALIZACION','updatedTime'],['VISITANTE_NOMBRE','visitorName'],['VISITANTE_CORREO','visitorEmail'],['AREA_VISITANTE','visitorArea'],['ROL_VISITANTE','visitorRole'],['SEDE','campus'],['MODALIDAD','modality'],['PLATAFORMA_VIRTUAL','platform'],['SESION_VIRTUAL','virtualSession'],['DIRECCION','address'],['LATITUD','latitude'],['LONGITUD','longitude'],['PRECISION_M','accuracyM'],['TIPO_REGISTRO','recordType'],['TIPO_PERSONA','personType'],['PERSONA_NOMBRE','personName'],['PERSONA_CODIGO','personCode'],['PROGRAMA_CARRERA','program'],['CURSO_ASIGNATURA','course'],['CICLO','cycle'],['TURNO','turn'],['AULA_SECCION','section'],['ESPACIO_AMBIENTE','space'],['CONTEXTO_REFERENCIA','reference'],['DIMENSION','dimension'],['CRITERIOS','criteria'],['NATURALEZA','nature'],['ALCANCE','scope'],['RECURRENCIA','recurrence'],['ACCION_POSTERIOR','followup'],['AREA_DERIVACION','derivationArea'],['PERSONA_DERIVACION','derivationName'],['CORREO_DERIVACION','derivationEmail'],['ESTADO_DERIVACION','derivationStatus'],['FECHA_DERIVACION','derivationAt'],['NOTA','note'],['TRANSCRIPCION','transcript'],['N_EVIDENCIAS','evidenceCount'],['NOMBRES_EVIDENCIAS','evidenceNames'],['RUTA_ADJUNTOS','attachmentPaths']];
+    for(let i=1;i<=maxAtt;i++)cols.push([`ADJUNTO_${i}`,`__att${i}`]);
+    const header=cols.map(c=>csvCell(c[0])).join(';');const rows=[];
+    for(const r of fieldRecords){
+      const paths=(allAtt[r.recordId]||[]).map(x=>x.path);const rr={...r,attachmentPaths:paths.join(' | ')};
+      (allAtt[r.recordId]||[]).forEach((x,i)=>{rr[`__att${i+1}`]=`=HIPERVINCULO("${x.path.replace(/\//g,'\\\\')}";"Abrir adjunto ${i+1}")`});
+      rows.push(cols.map(c=>csvCell(rr[c[1]]??'')).join(';'));
+    }
+    const csv='\uFEFF'+[header,...rows].join('\r\n');
+    zipFiles.unshift({name:'Ruta_SISE_Registros.csv',data:new TextEncoder().encode(csv)});
+    const readme='RUTA AULA DIGITAL\r\n\r\n1. Extrae todo el contenido de este ZIP antes de abrir Ruta_SISE_Registros.csv.\r\n2. Los adjuntos se encuentran dentro de la carpeta adjuntos.\r\n3. Las columnas ADJUNTO_1, ADJUNTO_2, etc. incluyen hipervínculos relativos para abrir los archivos desde Excel cuando el programa admite HIPERVINCULO en CSV.\r\n4. La columna RUTA_ADJUNTOS conserva la ruta de cada archivo como respaldo.\r\n5. Los archivos se almacenan localmente en el dispositivo hasta su exportación; no requieren conexión a internet.';
+    zipFiles.push({name:'LEEME.txt',data:new TextEncoder().encode(readme)});
+    const zip=makeZip(zipFiles),blob=new Blob([zip],{type:'application/zip'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=`Ruta_SISE_${sanitizeFileName(state.visitMeta?.campus||'SISE')}_${state.visitMeta?.dateISO||new Date().toISOString().slice(0,10)}.zip`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);showToast('Paquete con registros y adjuntos generado.');
   }
 
   function showToast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2800)}
 
-  // Audio + speech recognition prototype
+  function recommendationFor(record){
+    const d=record.dimension||'';let area='Jefatura Sedes y Experiencia';
+    if(d.startsWith('D1'))area='Gestión Docente / Jefatura de Escuela';
+    else if(d.startsWith('D2'))area='Gestión Curricular / Jefatura de Escuela';
+    else if(d.startsWith('D3'))area='Innovación y Transformación Educativa / Jefatura Sedes y Experiencia';
+    else if(d.startsWith('D4')||d.startsWith('D5')||d.startsWith('D6')||d.startsWith('D8')||d.startsWith('D10'))area='Jefatura Sedes y Experiencia';
+    else if(d.startsWith('D7'))area='Jefatura Sedes y Experiencia / Jefatura de Escuela';
+    else if(d.startsWith('D9'))area='Jefatura de Escuela';
+    else if(record.actionKey==='Aula'||record.actionKey==='Docente')area='Gestión Docente / Jefatura de Escuela';
+    else if(record.actionKey==='Estudiante')area='Jefatura Sedes y Experiencia / Jefatura de Escuela';
+    let tip='Validar con la evidencia disponible y definir si requiere seguimiento.';
+    if(record.nature==='Alerta')tip='Atender con prioridad, confirmar responsable y definir una fecha de respuesta.';
+    else if(record.nature==='Brecha')tip='Contrastar con otra evidencia y acordar una acción concreta con responsable.';
+    else if(record.nature==='Oportunidad')tip='Revisar factibilidad y, si aporta valor, probar una mejora acotada.';
+    else if(record.nature==='Fortaleza')tip='Documentar la práctica y evaluar si puede replicarse en otros espacios.';
+    if(record.followup==='Escalar como incidencia')tip='Escalar como incidencia y asegurar responsable, trazabilidad y fecha de atención.';
+    return {area,tip};
+  }
+  function persistDraft(){
+    try{localStorage.setItem('rutaAulaDraftRecords',JSON.stringify({visitMeta:state.visitMeta,records:state.records,counters:state.counters,updatedAt:new Date().toISOString()}))}catch(e){}
+  }
+  function renderClosure(){
+    const recs=state.records.filter(r=>r.systemEvent==='REGISTRO_CAMPO');
+    $('#closureRooms').textContent=state.counters.rooms;$('#closureRecords').textContent=recs.length;$('#closureFollowups').textContent=recs.filter(r=>r.followup&&r.followup!=='Solo registrar').length;
+    const box=$('#closureList');
+    if(!recs.length){box.innerHTML='<div style="padding:18px 0;color:#64748b;font-size:13px">Aún no hay registros de campo. Vuelve al recorrido si necesitas registrar información antes de finalizar la visita.</div>';return}
+    box.innerHTML=recs.map(r=>{
+      const rec=recommendationFor(r),title=`${r.recordType}${r.personName?`: ${r.personName}`:''}`,desc=r.note||r.criteria||r.dimension||'Registro sin comentario adicional.';
+      const canDerive=r.followup==='Requiere seguimiento'||r.followup==='Escalar como incidencia';
+      return `<article class="closure-item" data-closure-id="${escapeHtml(r.recordId)}"><div class="closure-item-top"><h4>${escapeHtml(title)}</h4>${r.nature?`<span class="closure-tag">${escapeHtml(r.nature)}</span>`:''}</div><p>${escapeHtml(desc)}</p><div class="closure-controls"><div class="closure-control"><label>Recurrencia</label><select data-closure-recurrence="${escapeHtml(r.recordId)}"><option ${r.recurrence==='Nuevo'||!r.recurrence?'selected':''}>Nuevo</option><option ${r.recurrence==='Reiterado en esta sede'?'selected':''}>Reiterado en esta sede</option><option ${r.recurrence==='Visto en otras sedes'?'selected':''}>Visto en otras sedes</option></select></div><div class="closure-control"><label>Acción posterior</label><select data-closure-followup="${escapeHtml(r.recordId)}"><option ${r.followup==='Solo registrar'||!r.followup?'selected':''}>Solo registrar</option><option ${r.followup==='Requiere seguimiento'?'selected':''}>Requiere seguimiento</option><option ${r.followup==='Escalar como incidencia'?'selected':''}>Escalar como incidencia</option></select></div></div><div class="recommend-box"><div class="recommend-head"><div><strong>Área sugerida: ${escapeHtml(rec.area)}</strong><span>${escapeHtml(rec.tip)}</span></div>${canDerive?`<button type="button" class="derive-btn" data-derive-record="${escapeHtml(r.recordId)}">Derivar</button>`:''}</div>${r.derivationStatus?`<span class="derive-status">${escapeHtml(r.derivationStatus)}${r.derivationEmail?` · ${escapeHtml(r.derivationEmail)}`:''}</span>`:''}</div></article>`
+    }).join('');
+  }
+  function openClosure(){
+    if(!state.visitStart||state.visitClosed){showToast('Inicia una visita antes de revisar el cierre.');return}
+    closeCapture();$('#screenDashboard').classList.add('hidden');$('#screenClosure').classList.remove('hidden');$('#sideStep2').classList.remove('active');$('#sideStep3').classList.add('active');$('#progressBar').style.width='100%';renderClosure();window.scrollTo({top:0,behavior:'smooth'});$$('.mob-nav').forEach(x=>x.classList.toggle('active',x.dataset.mobile==='Cierre'))
+  }
+  function backToDashboard(){
+    if(state.visitClosed)return;$('#screenClosure').classList.add('hidden');$('#screenDashboard').classList.remove('hidden');$('#sideStep3').classList.remove('active');$('#sideStep2').classList.add('active');$('#progressBar').style.width='66%';$$('.mob-nav').forEach(x=>x.classList.toggle('active',x.dataset.mobile==='Inicio'));window.scrollTo({top:0,behavior:'smooth'})
+  }
+  $('#continueToClosureBtn')?.addEventListener('click',openClosure);$('#backToDashboard')?.addEventListener('click',backToDashboard);$('#finishVisitFromClosure')?.addEventListener('click',openExitModal);
+  $('#sideStep3')?.addEventListener('click',openClosure);$('#sideStep3')?.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openClosure()}});
+
+  $('#closureList')?.addEventListener('change',e=>{
+    const recurrence=e.target.closest('[data-closure-recurrence]'),followup=e.target.closest('[data-closure-followup]');
+    const id=recurrence?.dataset.closureRecurrence||followup?.dataset.closureFollowup;if(!id)return;
+    const record=state.records.find(r=>r.recordId===id);if(!record)return;
+    if(recurrence)record.recurrence=recurrence.value;if(followup)record.followup=followup.value;
+    record.updatedTime=new Intl.DateTimeFormat('es-PE',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+    persistDraft();persistUserHistory(record);$('#closureFollowups').textContent=state.records.filter(r=>r.systemEvent==='REGISTRO_CAMPO'&&r.followup&&r.followup!=='Solo registrar').length;
+    if(followup)renderClosure();
+  });
+  $('#closureList')?.addEventListener('click',e=>{const btn=e.target.closest('[data-derive-record]');if(btn)openDerivation(btn.dataset.deriveRecord)});
+
+  function openInfo(btn){$('#infoModalTitle').textContent=btn.dataset.infoTitle||'Información';$('#infoModalText').textContent=btn.dataset.infoText||'';$('#infoModal').classList.add('open');$('#infoModal').setAttribute('aria-hidden','false')}
+  function closeInfo(){$('#infoModal').classList.remove('open');$('#infoModal').setAttribute('aria-hidden','true')}
+  document.addEventListener('click',e=>{const b=e.target.closest('.info-btn');if(b){e.preventDefault();e.stopPropagation();openInfo(b)}});$('#closeInfoModal')?.addEventListener('click',closeInfo);$('#acceptInfoModal')?.addEventListener('click',closeInfo);$('#infoModal')?.addEventListener('click',e=>{if(e.target===$('#infoModal'))closeInfo()});
+  $('#historyBtn')?.addEventListener('click',openHistory);$('#closeHistoryModal')?.addEventListener('click',closeHistory);$('#historyModal')?.addEventListener('click',e=>{if(e.target===$('#historyModal'))closeHistory()});
+  $('#closeDeriveModal')?.addEventListener('click',closeDerivation);$('#cancelDeriveBtn')?.addEventListener('click',closeDerivation);$('#deriveModal')?.addEventListener('click',e=>{if(e.target===$('#deriveModal'))closeDerivation()});
+
+$('#confirmDeriveBtn')?.addEventListener('click',async()=>{
+  const record=state.records.find(r=>r.recordId===state.derivationRecordId);if(!record)return;
+  const name=$('#deriveName').value.trim(),email=$('#deriveEmail').value.trim(),message=$('#deriveMessage').value.trim();const area=recommendationFor(record).area;
+  const okName=name.length>2,okEmail=validEmail(email);$('#deriveNameField').classList.toggle('invalid',!okName);$('#deriveEmailField').classList.toggle('invalid',!okEmail);if(!okName||!okEmail)return;
+  const btn=$('#confirmDeriveBtn');btn.disabled=true;const originalText=btn.textContent;btn.textContent='Enviando…';
+  const subject=`Ruta SISE · Derivación ${record.recordId}`;
+  const body=buildDerivationMail(record,name,area,message);
+  const payload={
+    to:email,
+    name,
+    subject,
+    body,
+    area,
+    recordId:record.recordId,
+    sender:{name:record.visitorName||'',email:record.visitorEmail||''},
+    record:{
+      recordId:record.recordId,recordType:record.recordType,dimension:record.dimension,nature:record.nature,scope:record.scope,
+      recurrence:record.recurrence,followup:record.followup,note:record.note,criteria:record.criteria,campus:record.campus,modality:record.modality,
+      platform:record.platform,virtualSession:record.virtualSession,visitDate:record.visitDate,recordTime:record.recordTime
+    },
+    attachments:(record.attachmentRefs||[]).map(a=>({name:a.name||'',type:a.type||'',id:a.id||''}))
+  };
+  record.derivationArea=area;record.derivationName=name;record.derivationEmail=email;record.derivationAt=new Date().toISOString();
+  if(!record.followup||record.followup==='Solo registrar')record.followup='Requiere seguimiento';
+  try{
+    if(!navigator.onLine){
+      record.derivationStatus='Pendiente de envío (sin conexión)';
+      queueDerivation({queueId:`${record.recordId}-${email}`,recordId:record.recordId,payload,createdAt:new Date().toISOString()});
+      persistDraft();persistUserHistory(record);closeDerivation();renderClosure();showToast('Derivación guardada. Se enviará automáticamente cuando vuelva internet.');
+      return;
+    }
+    if(!RUTA_SISE_CONFIG.emailEndpoint){
+      record.derivationStatus='Pendiente de integración de correo';
+      queueDerivation({queueId:`${record.recordId}-${email}`,recordId:record.recordId,payload,createdAt:new Date().toISOString()});
+      persistDraft();persistUserHistory(record);closeDerivation();renderClosure();showToast('La derivación quedó registrada. Falta conectar el servicio institucional de correo para enviarla directamente.');
+      return;
+    }
+    await postDerivation(payload);
+    record.derivationStatus='Correo enviado';record.derivationAt=new Date().toISOString();
+    persistDraft();persistUserHistory(record);closeDerivation();renderClosure();showToast('Derivación enviada directamente desde Ruta SISE.');
+  }catch(err){
+    record.derivationStatus='Pendiente de reintento';
+    queueDerivation({queueId:`${record.recordId}-${email}`,recordId:record.recordId,payload,createdAt:new Date().toISOString(),lastError:String(err?.message||err)});
+    persistDraft();persistUserHistory(record);closeDerivation();renderClosure();showToast('No se pudo enviar ahora. Quedó en cola para reintento automático.');
+  }finally{btn.disabled=false;btn.textContent=originalText;}
+});
+
+// Audio + speech recognition prototype
   $('#micButton').addEventListener('click',()=>state.listening?stopMic():startMic());
   async function startMic(){
     if(!$('#consentAudio').checked){showToast('Confirma la autorización antes de grabar.');return}
@@ -1104,7 +1545,7 @@
   }
   function stopMic(){state.listening=false;$('#micButton').classList.remove('recording');$('#micTitle').textContent='Grabación finalizada';$('#micStatus').textContent='Revisa el texto antes de guardar.';try{if(state.recognition)state.recognition.stop()}catch(e){}try{if(state.mediaRecorder&&state.mediaRecorder.state!=='inactive')state.mediaRecorder.stop()}catch(e){}}
 
-  $$('.mob-nav').forEach(btn=>btn.addEventListener('click',()=>{$$('.mob-nav').forEach(x=>x.classList.toggle('active',x===btn));if(btn.dataset.mobile==='Registrar'&&!$('#screenDashboard').classList.contains('hidden'))openCapture('Hallazgo');if(btn.dataset.mobile==='Inicio')window.scrollTo({top:0,behavior:'smooth'});if(btn.dataset.mobile==='Cierre')showToast('El módulo de cierre se habilitará en la siguiente iteración del prototipo.')}));
+  $$('.mob-nav').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.mobile==='Registrar'){if(!$('#screenDashboard').classList.contains('hidden'))openCapture('Hallazgo');else if(!$('#screenClosure').classList.contains('hidden')){backToDashboard();setTimeout(()=>openCapture('Hallazgo'),80)}}else if(btn.dataset.mobile==='Inicio'){if(!$('#screenClosure').classList.contains('hidden'))backToDashboard();else window.scrollTo({top:0,behavior:'smooth'})}else if(btn.dataset.mobile==='Cierre')openClosure()}));
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCapture()});
 
 
@@ -1112,15 +1553,15 @@
   const el=document.getElementById(id);
   if(el){el.addEventListener('input',updateHeaderIdentity);el.addEventListener('change',updateHeaderIdentity)}
 });
-updateHeaderIdentity();
+restoreLoginIdentity();updateHeaderIdentity();
 
 function openExitModal(){
-  const active=state.visitStart&&!state.visitClosed&&!$('#screenDashboard').classList.contains('hidden');
-  $('#exitModalTitle').textContent=active?'¿Cerrar la visita?':'¿Salir de la plataforma?';
+  const active=state.visitStart&&!state.visitClosed;
+  $('#exitModalTitle').textContent=active?'¿Finalizar la visita?':'¿Salir de la plataforma?';
   $('#exitModalText').textContent=active
-    ?'Se registrará automáticamente la hora de salida, la duración y el cierre de esta sesión. Luego podrás descargar el registro.'
+    ?'Se registrarán la hora de salida y la duración. Esta acción corresponde al Paso 3: cierre de la visita.'
     :'No hay una visita activa. Puedes volver a la pantalla inicial cuando lo necesites.';
-  $('#confirmExitBtn').textContent=active?'Cerrar y registrar':'Salir';
+  $('#confirmExitBtn').textContent=active?'Finalizar visita':'Salir';
   $('#exitModal').classList.add('open');
   $('#exitModal').setAttribute('aria-hidden','false');
 }
@@ -1147,19 +1588,21 @@ function closeActiveVisit(){
   const exitDate=state.visitEnd.toISOString().slice(0,10);
   const exitTime=new Intl.DateTimeFormat('es-PE',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(state.visitEnd);
   const closureRecord={
-    recordId:`RA-${state.visitEnd.getFullYear()}${String(state.visitEnd.getMonth()+1).padStart(2,'0')}${String(state.visitEnd.getDate()).padStart(2,'0')}-${String(state.records.length+1).padStart(4,'0')}`,
+    recordId:`CIERRE-${state.visitId||Date.now()}`, visitId:state.visitId,
     systemEvent:'CIERRE_VISITA', visitStatus:'Cerrada', visitEndDate:exitDate, visitEndTime:exitTime, durationMinutes,
     visitDate:state.visitMeta?.dateISO||'', visitStartTime:state.visitMeta?.timeISO||'', recordTime:exitTime,
     visitorName:state.visitMeta?.visitorName||'', visitorEmail:state.visitMeta?.visitorEmail||'', visitorArea:state.visitMeta?.area||'', visitorRole:state.visitMeta?.role||'',
     campus:state.visitMeta?.campus||'', modality:state.visitMeta?.modality||'', platform:state.visitMeta?.platform||'', virtualSession:state.visitMeta?.sessionId||'',
-    address:state.location?.address||'', latitude:state.location?.lat??'', longitude:state.location?.lng??'', accuracyM:state.location?.accuracy?Math.round(state.location.accuracy):'',
-    recordType:'Cierre de sesión', personType:'', personName:'', personCode:'', program:'', course:'', cycle:'', turn:'', section:'', dimension:'', criteria:'', nature:'', scope:'', recurrence:'', followup:'',
-    note:'Salida registrada automáticamente desde el botón Salir.', transcript:'', evidenceCount:0, evidenceNames:'', evidenceTypes:'', time:state.visitEnd
+    address:state.visitMeta?.modality==='Presencial'?(state.location?.address||''):'', latitude:state.visitMeta?.modality==='Presencial'?(state.location?.lat??''):'', longitude:state.visitMeta?.modality==='Presencial'?(state.location?.lng??''):'', accuracyM:state.visitMeta?.modality==='Presencial'&&state.location?.accuracy?Math.round(state.location.accuracy):'',
+    recordType:'Cierre de visita', actionKey:'Cierre', personType:'', personName:'', personCode:'', program:'', course:'', cycle:'', turn:'', section:'', space:'', reference:'', dimension:'', criteria:'', nature:'', scope:'', recurrence:'', followup:'', updatedTime:exitTime,
+    note:'Visita finalizada desde el Paso 3: cierre.', transcript:'', evidenceCount:0, evidenceNames:'', evidenceTypes:'', time:state.visitEnd
   };
   state.records.unshift(closureRecord);
+  persistUserHistory(closureRecord);
   persistClosedVisit();
   $('#screenRegister').classList.add('hidden');
   $('#screenDashboard').classList.add('hidden');
+  $('#screenClosure').classList.add('hidden');
   $('#screenClosed').classList.remove('hidden');
   $('#sideStep1').classList.remove('active');
   $('#sideStep2').classList.remove('active');
@@ -1173,13 +1616,14 @@ function closeActiveVisit(){
 }
 
 function resetForNewVisit(){
-  state.mode=''; state.location=null; state.visitStart=null; state.visitEnd=null; state.visitClosed=false; state.visitMeta=null;
-  state.counters={rooms:0,people:0,findings:0}; state.records=[]; state.currentAction=''; state.currentAttachments=[];
+  state.mode=''; state.location=null; state.visitStart=null; state.visitEnd=null; state.visitClosed=false; state.visitMeta=null; state.visitId=''; state.derivationRecordId='';
+  state.counters={rooms:0,people:0,findings:0}; state.records=[]; state.currentAction=''; state.currentAttachments=[]; state.editingRecordId=null; state.attachmentMemory={};
   if(state.timerHandle){clearInterval(state.timerHandle);state.timerHandle=null}
-  $('#visitForm').reset();
+  const keepIdentity={name:$('#fullName')?.value||'',email:$('#email')?.value||'',area:$('#area')?.value||'',role:$('#role')?.value||''};
+  $('#visitForm').reset();if($('#fullName'))$('#fullName').value=keepIdentity.name;if($('#email'))$('#email').value=keepIdentity.email;if($('#area'))$('#area').value=keepIdentity.area;if($('#role'))$('#role').value=keepIdentity.role;
   $$('.mode-btn').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-pressed','false')});
-  $('#mode').value=''; $('#virtualExtra').classList.add('hidden');
-  $('#screenClosed').classList.add('hidden'); $('#screenDashboard').classList.add('hidden'); $('#screenRegister').classList.remove('hidden');
+  $('#mode').value=''; $('#virtualExtra').classList.add('hidden'); $('#locationBlock')?.classList.add('hidden');
+  $('#screenClosed').classList.add('hidden'); $('#screenClosure').classList.add('hidden'); $('#screenDashboard').classList.add('hidden'); $('#screenRegister').classList.remove('hidden');
   $('#sideStep1').classList.add('active'); $('#sideStep2').classList.remove('active'); $('#sideStep3').classList.remove('active');
   $('#progressBar').style.width='33%'; updateCounters(); renderRecent(); setNow(); updateHeaderIdentity();
   $('#mapLink').style.display='none'; $('#requestLocationLabel').textContent='Activar ubicación'; updateCampusAddressPreview();
@@ -1187,20 +1631,20 @@ function resetForNewVisit(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-$('#exitVisitBtn')?.addEventListener('click',openExitModal);
+$('#exitVisitBtn')?.addEventListener('click',()=>{const active=state.visitStart&&!state.visitClosed;if(active&&!$('#screenDashboard').classList.contains('hidden')){openClosure();showToast('Paso 3: revisa el cierre antes de finalizar la visita.');return}openExitModal()});
 $('#cancelExitBtn')?.addEventListener('click',closeExitModal);
 $('#exitModal')?.addEventListener('click',e=>{if(e.target===$('#exitModal'))closeExitModal()});
 $('#confirmExitBtn')?.addEventListener('click',()=>{
-  const active=state.visitStart&&!state.visitClosed&&!$('#screenDashboard').classList.contains('hidden');
+  const active=state.visitStart&&!state.visitClosed;
   closeExitModal();
   if(active){closeActiveVisit();return}
-  $('#screenRegister').classList.remove('hidden'); $('#screenDashboard').classList.add('hidden'); $('#screenClosed').classList.add('hidden');
+  $('#screenRegister').classList.remove('hidden'); $('#screenDashboard').classList.add('hidden'); $('#screenClosure').classList.add('hidden'); $('#screenClosed').classList.add('hidden');
   showToast('No había una visita activa por cerrar.');
 });
 $('#downloadClosedVisit')?.addEventListener('click',downloadExcelData);
 $('#newVisitBtn')?.addEventListener('click',resetForNewVisit);
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#exitModal')?.classList.contains('open'))closeExitModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#exitModal')?.classList.contains('open'))closeExitModal();if(e.key==='Escape'&&$('#historyModal')?.classList.contains('open'))closeHistory();if(e.key==='Escape'&&$('#deriveModal')?.classList.contains('open'))closeDerivation()});
 
 
   // Permite abrir nuevamente la aplicación sin internet después de la primera carga en HTTPS.
