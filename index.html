@@ -828,6 +828,7 @@
         <button class="mic-button" id="micButton" type="button" aria-label="Iniciar grabación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg></button>
         <div class="mic-title" id="micTitle">Grabar y transcribir</div>
         <div class="mic-status" id="micStatus">Toca el micrófono para comenzar.</div>
+        <div id="speechCompat" style="margin-top:7px;font-size:11px;line-height:1.45;color:#64748b">Ruta SISE detectará automáticamente el motor compatible del celular. En iPhone/iPad prioriza Safari; en Android, Chrome.</div>
         <div class="transcript" id="transcriptBox">La transcripción aparecerá aquí y podrás revisarla antes de guardar.</div>
         <audio id="audioPlayback" class="audio-playback" controls></audio>
       </div>
@@ -872,6 +873,18 @@
     mediaChunks:[],
     recognition:null,
     listening:false,
+    micStream:null,
+    recognitionTrack:null,
+    recognitionUseTrack:false,
+    recognitionStarting:false,
+    speechManualStop:false,
+    speechRestartTimer:null,
+    speechBaseText:'',
+    speechFinalText:'',
+    speechInterimText:'',
+    speechLocal:false,
+    speechFatal:false,
+    audioObjectUrl:'',
     editingRecordId:null,
     attachmentMemory:{}
   };
@@ -1270,7 +1283,9 @@ async function flushPendingDerivations(){
   function resetCaptureForm(){
     ['#captureProgram','#captureCourse','#captureCycle','#captureSection','#captureSpace','#captureReference','#personName','#personCode','#captureNote'].forEach(s=>{if($(s))$(s).value=''});
     $('#captureTurn').value=''; $('#captureDimension').value='';
+    if(state.audioObjectUrl){try{URL.revokeObjectURL(state.audioObjectUrl)}catch(e){} state.audioObjectUrl='';}
     $('#transcriptBox').textContent='La transcripción aparecerá aquí y podrás revisarla antes de guardar.'; $('#audioPlayback').style.display='none'; $('#audioPlayback').removeAttribute('src');
+    state.speechBaseText='';state.speechFinalText='';state.speechInterimText='';state.speechFatal=false;
     $('#consentAudio').checked=false; $$('#captureSheet .chip.active').forEach(c=>c.classList.remove('active')); state.currentAttachments=[]; renderAttachments(); $('#fieldPersonName').classList.remove('invalid'); state.editingRecordId=null; $('#saveCapture').textContent='Cerrar y registrar';
   }
   function openCapture(action,keepEdit=false){
@@ -1525,25 +1540,269 @@ $('#confirmDeriveBtn')?.addEventListener('click',async()=>{
   }finally{btn.disabled=false;btn.textContent=originalText;}
 });
 
-// Audio + speech recognition prototype
+// Audio + transcripción multiplataforma (Android + iPhone/iPad)
   $('#micButton').addEventListener('click',()=>state.listening?stopMic():startMic());
+
+  function isIOSDevice(){
+    return /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  }
+  function isSafariBrowser(){
+    const ua=navigator.userAgent;
+    return /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|Chrome|Chromium|Android/i.test(ua);
+  }
+  function speechRecognitionClass(){return window.SpeechRecognition||window.webkitSpeechRecognition||null}
+  function preferredAudioMime(){
+    if(typeof MediaRecorder==='undefined')return '';
+    const types=['audio/mp4;codecs=mp4a.40.2','audio/mp4','audio/webm;codecs=opus','audio/webm'];
+    return types.find(t=>{try{return MediaRecorder.isTypeSupported(t)}catch(e){return false}})||'';
+  }
+  function cleanTranscriptPlaceholder(){
+    const el=$('#transcriptBox');
+    if(el.textContent.includes('aparecerá aquí')||el.textContent.includes('no ofrece transcripción'))el.textContent='';
+  }
+  function updateTranscriptDisplay(){
+    const text=[state.speechBaseText,state.speechFinalText,state.speechInterimText].filter(Boolean).join(' ').replace(/\s+/g,' ').trim();
+    if(text){
+      $('#transcriptBox').textContent=text;
+      $('#captureNote').value=text;
+    }
+  }
+  function speechErrorText(code){
+    const map={
+      'not-allowed':'No se autorizó el micrófono. Habilita el permiso del navegador y vuelve a intentarlo.',
+      'service-not-allowed':'El navegador bloqueó el servicio de reconocimiento. En iPhone/iPad abre Ruta SISE directamente en Safari.',
+      'audio-capture':'El navegador no pudo tomar el micrófono para transcribir. Ruta SISE cambiará automáticamente al modo compatible.',
+      'network':'El reconocimiento de voz necesita conexión en este dispositivo. Si existe reconocimiento local, Ruta SISE lo activará automáticamente.',
+      'no-speech':'No se detectó voz. Continúa hablando o toca el micrófono para finalizar.',
+      'language-not-supported':'El motor de voz no admite español de Perú; se intentará español general.',
+      'aborted':'La transcripción fue detenida.'
+    };
+    return map[code]||`No fue posible transcribir (${code||'error'}).`;
+  }
+
+  async function prepareOnDeviceSpeech(SR,recognition){
+    state.speechLocal=false;
+    recognition.lang='es-PE';
+    if(!('processLocally' in recognition) || typeof SR.available!=='function')return;
+    const candidates=['es-PE','es-ES'];
+    for(const lang of candidates){
+      const base={langs:[lang],processLocally:true};
+      let availability='unavailable';
+      try{
+        try{availability=await SR.available({...base,quality:'dictation'})}
+        catch(e){availability=await SR.available(base)}
+        if((availability==='downloadable'||availability==='downloading') && navigator.onLine && typeof SR.install==='function'){
+          $('#micStatus').textContent='Preparando reconocimiento de voz sin conexión…';
+          let installed=false;
+          try{installed=await SR.install({...base,quality:'dictation'})}
+          catch(e){try{installed=await SR.install(base)}catch(e2){installed=false}}
+          if(installed)availability='available';
+        }
+        if(availability==='available'){
+          recognition.lang=lang;
+          recognition.processLocally=true;
+          state.speechLocal=true;
+          $('#speechCompat').textContent='Reconocimiento local activado: la transcripción puede funcionar sin internet en este dispositivo.';
+          return;
+        }
+      }catch(e){}
+    }
+    try{recognition.processLocally=false}catch(e){}
+  }
+
+  function stopAndReleaseStream(discardAudio=false){
+    if(state.mediaRecorder && state.mediaRecorder.state!=='inactive'){
+      state.discardRecordedAudio=discardAudio;
+      try{state.mediaRecorder.stop()}catch(e){}
+    }else if(state.micStream){
+      state.micStream.getTracks().forEach(t=>{try{t.stop()}catch(e){}});
+      state.micStream=null;
+    }
+  }
+
+  async function startAudioRecorder(){
+    if(!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder==='undefined')return null;
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+      state.micStream=stream;
+      state.mediaChunks=[];
+      const mime=preferredAudioMime();
+      state.mediaRecorder=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream);
+      state.mediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size)state.mediaChunks.push(e.data)};
+      state.mediaRecorder.onstop=()=>{
+        const activeStream=state.micStream;
+        if(activeStream)activeStream.getTracks().forEach(t=>{try{t.stop()}catch(e){}});
+        state.micStream=null;
+        if(state.discardRecordedAudio){state.discardRecordedAudio=false;state.mediaChunks=[];return}
+        if(!state.mediaChunks.length)return;
+        const type=state.mediaRecorder?.mimeType||mime||'audio/webm';
+        const blob=new Blob(state.mediaChunks,{type});
+        if(blob.size<1200)return;
+        if(state.audioObjectUrl)URL.revokeObjectURL(state.audioObjectUrl);
+        state.audioObjectUrl=URL.createObjectURL(blob);
+        $('#audioPlayback').src=state.audioObjectUrl;
+        $('#audioPlayback').style.display='block';
+        const ext=type.includes('mp4')?'m4a':'webm';
+        const stamp=new Date().toISOString().replace(/[:.]/g,'-');
+        try{
+          const file=new File([blob],`audio_Ruta_SISE_${stamp}.${ext}`,{type});
+          // Evita duplicar el mismo audio si el navegador dispara onstop más de una vez.
+          if(!state.currentAttachments.some(a=>a.file?.name===file.name)){
+            state.currentAttachments.push({file,url:state.audioObjectUrl,isRecordedAudio:true});
+            renderAttachments();
+          }
+        }catch(e){}
+      };
+      state.mediaRecorder.start(600);
+      return stream.getAudioTracks()[0]||null;
+    }catch(e){return null}
+  }
+
+  function startRecognitionNow(recognition,track=null){
+    if(!state.listening||state.speechManualStop||state.recognitionStarting)return;
+    state.recognitionStarting=true;
+    try{
+      if(track){
+        recognition.start(track);
+        state.recognitionUseTrack=true;
+      }else{
+        recognition.start();
+        state.recognitionUseTrack=false;
+      }
+    }catch(err){
+      state.recognitionStarting=false;
+      if(track){
+        // Safari/iOS puede exponer SpeechRecognition pero no aceptar una pista compartida.
+        // En ese caso se prioriza transcripción y se libera MediaRecorder antes de iniciar.
+        stopAndReleaseStream(true);
+        state.recognitionTrack=null;
+        state.recognitionUseTrack=false;
+        setTimeout(()=>startRecognitionNow(recognition,null),220);
+      }else{
+        $('#micStatus').textContent='No se pudo iniciar la transcripción. Revisa el permiso del micrófono y vuelve a intentarlo.';
+        state.speechFatal=true;
+      }
+    }
+  }
+
+  function scheduleRecognitionRestart(){
+    clearTimeout(state.speechRestartTimer);
+    if(!state.listening||state.speechManualStop||state.speechFatal)return;
+    state.speechRestartTimer=setTimeout(()=>startRecognitionNow(state.recognition,state.recognitionUseTrack?state.recognitionTrack:null),260);
+  }
+
+  function wireRecognition(recognition){
+    recognition.continuous=!isIOSDevice();
+    recognition.interimResults=true;
+    recognition.maxAlternatives=1;
+    recognition.onstart=()=>{
+      state.recognitionStarting=false;
+      $('#micStatus').textContent=state.speechLocal?'Transcribiendo en el dispositivo. Habla con naturalidad.':'Transcribiendo en vivo. Habla con naturalidad.';
+    };
+    recognition.onaudiostart=()=>{$('#micTitle').textContent='Escuchando y transcribiendo…'};
+    recognition.onspeechstart=()=>{$('#micStatus').textContent='Voz detectada. Continúa hablando con naturalidad.'};
+    recognition.onresult=e=>{
+      let interim='';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const tx=(e.results[i][0]?.transcript||'').trim();
+        if(!tx)continue;
+        if(e.results[i].isFinal)state.speechFinalText+=(state.speechFinalText?' ':'')+tx;
+        else interim+=(interim?' ':'')+tx;
+      }
+      state.speechInterimText=interim;
+      updateTranscriptDisplay();
+    };
+    recognition.onnomatch=()=>{$('#micStatus').textContent='No se reconoció esa parte. Continúa hablando; no se perderá el texto anterior.'};
+    recognition.onerror=e=>{
+      state.recognitionStarting=false;
+      const code=e.error||'error';
+      if(code==='aborted'&&state.speechManualStop)return;
+      if(code==='no-speech'){$('#micStatus').textContent=speechErrorText(code);return}
+      if(code==='audio-capture'&&state.recognitionUseTrack){
+        $('#micStatus').textContent='Ajustando el micrófono para iPhone/Android…';
+        stopAndReleaseStream(true);
+        state.recognitionTrack=null;
+        state.recognitionUseTrack=false;
+        return;
+      }
+      if(code==='language-not-supported'&&recognition.lang!=='es-ES'){
+        recognition.lang='es-ES';
+        $('#micStatus').textContent='Cambiando a reconocimiento en español general…';
+        return;
+      }
+      if(code==='network'&&!navigator.onLine&&!state.speechLocal){
+        $('#micStatus').textContent='Sin internet: este navegador no tiene un motor local de voz disponible. El audio seguirá guardándose para no perder la evidencia.';
+        $('#speechCompat').textContent='El registro y el audio funcionan offline. Para transcripción offline completa, el navegador debe disponer de reconocimiento local instalado.';
+        state.speechFatal=true;
+        return;
+      }
+      if(code==='not-allowed'||code==='service-not-allowed')state.speechFatal=true;
+      $('#micStatus').textContent=speechErrorText(code);
+    };
+    recognition.onend=()=>{
+      state.recognitionStarting=false;
+      state.speechInterimText='';
+      updateTranscriptDisplay();
+      if(state.listening&&!state.speechManualStop&&!state.speechFatal)scheduleRecognitionRestart();
+    };
+  }
+
   async function startMic(){
     if(!$('#consentAudio').checked){showToast('Confirma la autorización antes de grabar.');return}
+    if(!window.isSecureContext && location.protocol!=='file:'){
+      showToast('El micrófono requiere HTTPS. Abre Ruta SISE desde GitHub Pages o un dominio seguro.');
+      return;
+    }
+    const SR=speechRecognitionClass();
+    cleanTranscriptPlaceholder();
+    state.speechBaseText=($('#transcriptBox').textContent||'').trim();
+    state.speechFinalText='';state.speechInterimText='';state.speechManualStop=false;state.speechFatal=false;state.speechLocal=false;
+    state.listening=true;
+    $('#micButton').classList.add('recording');
+    $('#micTitle').textContent='Preparando micrófono…';
+    $('#micStatus').textContent='Solicitando permiso del micrófono…';
+
+    let track=await startAudioRecorder();
+    state.recognitionTrack=track;
+
+    if(!SR){
+      $('#micTitle').textContent='Grabando audio';
+      $('#micStatus').textContent='Este navegador puede grabar, pero no ofrece reconocimiento de voz web. El audio quedará adjunto al registro.';
+      $('#speechCompat').textContent=isIOSDevice()?'En iPhone/iPad abre Ruta SISE directamente en Safari para habilitar la transcripción nativa.':'En Android usa Chrome actualizado para habilitar la transcripción nativa.';
+      if(!track){state.listening=false;$('#micButton').classList.remove('recording');showToast('No se pudo acceder al micrófono. Revisa los permisos del navegador.');}
+      return;
+    }
+
     try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:true}); state.mediaChunks=[]; state.mediaRecorder=new MediaRecorder(stream);
-      state.mediaRecorder.ondataavailable=e=>{if(e.data.size)state.mediaChunks.push(e.data)};
-      state.mediaRecorder.onstop=()=>{const blob=new Blob(state.mediaChunks,{type:state.mediaRecorder.mimeType||'audio/webm'}),url=URL.createObjectURL(blob);$('#audioPlayback').src=url;$('#audioPlayback').style.display='block';stream.getTracks().forEach(t=>t.stop())};
-      state.mediaRecorder.start();
-      const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-      if(SR){
-        state.recognition=new SR();state.recognition.lang='es-PE';state.recognition.continuous=true;state.recognition.interimResults=true;let finalText='';
-        state.recognition.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const tx=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=tx+' ';else interim+=tx}const combined=(finalText+interim).trim();if(combined){$('#transcriptBox').textContent=combined;$('#captureNote').value=combined}};
-        state.recognition.onerror=()=>{$('#micStatus').textContent='Audio en grabación. La transcripción en vivo no está disponible en este navegador.'};state.recognition.start();
-      }else $('#transcriptBox').textContent='Este navegador puede grabar audio, pero no ofrece transcripción en vivo. En producción se conectaría el motor de transcripción institucional.';
-      state.listening=true;$('#micButton').classList.add('recording');$('#micTitle').textContent='Grabando…';$('#micStatus').textContent='Habla con naturalidad. Toca nuevamente para finalizar.';
-    }catch(err){showToast('No se pudo acceder al micrófono. Revisa los permisos del navegador.')}
+      state.recognition=new SR();
+      wireRecognition(state.recognition);
+      await prepareOnDeviceSpeech(SR,state.recognition);
+      if(!state.speechLocal){
+        $('#speechCompat').textContent=isIOSDevice()
+          ?'Transcripción compatible con Safari en iPhone/iPad. Si el motor local no está disponible, puede requerir conexión.'
+          :'Transcripción compatible con Chrome en Android. Si el motor local no está disponible, puede requerir conexión.';
+      }
+      $('#micTitle').textContent='Grabando y transcribiendo…';
+      $('#micStatus').textContent='Iniciando reconocimiento de voz…';
+      startRecognitionNow(state.recognition,track);
+    }catch(err){
+      $('#micStatus').textContent='No se pudo iniciar el reconocimiento. El audio seguirá grabándose para conservar la evidencia.';
+      $('#speechCompat').textContent='Prueba abriendo Ruta SISE directamente en Safari (iPhone/iPad) o Chrome (Android).';
+    }
   }
-  function stopMic(){state.listening=false;$('#micButton').classList.remove('recording');$('#micTitle').textContent='Grabación finalizada';$('#micStatus').textContent='Revisa el texto antes de guardar.';try{if(state.recognition)state.recognition.stop()}catch(e){}try{if(state.mediaRecorder&&state.mediaRecorder.state!=='inactive')state.mediaRecorder.stop()}catch(e){}}
+
+  function stopMic(){
+    if(!state.listening)return;
+    state.listening=false;state.speechManualStop=true;
+    clearTimeout(state.speechRestartTimer);
+    $('#micButton').classList.remove('recording');
+    $('#micTitle').textContent='Grabación finalizada';
+    $('#micStatus').textContent='Revisa la transcripción antes de guardar.';
+    try{if(state.recognition)state.recognition.stop()}catch(e){try{state.recognition?.abort()}catch(e2){}}
+    stopAndReleaseStream(false);
+    state.recognitionTrack=null;
+    state.recognitionUseTrack=false;
+  }
 
   $$('.mob-nav').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.mobile==='Registrar'){if(!$('#screenDashboard').classList.contains('hidden'))openCapture('Hallazgo');else if(!$('#screenClosure').classList.contains('hidden')){backToDashboard();setTimeout(()=>openCapture('Hallazgo'),80)}}else if(btn.dataset.mobile==='Inicio'){if(!$('#screenClosure').classList.contains('hidden'))backToDashboard();else window.scrollTo({top:0,behavior:'smooth'})}else if(btn.dataset.mobile==='Cierre')openClosure()}));
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCapture()});
